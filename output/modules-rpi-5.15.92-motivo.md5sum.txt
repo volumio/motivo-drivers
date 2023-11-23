@@ -1,0 +1,1 @@
+89ae40178f36d271d2f28e47cd2a7666  modules-rpi-5.15.92-motivo.tar.gz
