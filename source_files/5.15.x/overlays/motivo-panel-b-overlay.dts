@@ -113,7 +113,7 @@
                 reset-gpios = <&gpio 26 0>;
                 touchscreen-size-x = <800>;
                 touchscreen-size-y = <1280>;
-                touchscreen-inverted-y;
+                touchscreen-inverted-x;
                 touchscreen-swapped-x-y;
             };
         };
