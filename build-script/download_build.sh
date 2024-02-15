@@ -77,6 +77,17 @@ cd ..
 echo "!!!  CM4 64-bit build done  !!!"
 echo "-------------------------"
 
+MAJOR_VERSION=$(echo "$KERNEL_VERSION" | cut -d '.' -f 1)
+MINOR_VERSION=$(echo "$KERNEL_VERSION" | cut -d '.' -f 2)
+
+if [ "$MAJOR_VERSION" -gt 5 ] || ([ "$MAJOR_VERSION" -eq 5 ] && [ "$MINOR_VERSION" -ge 15 ]); then
+    echo "!!!  Compress modules with XZ  !!!"
+    xz linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
+    xz linux-${KERNEL_VERSION}-v7l+/sound/usb/snd-usb-audio.ko
+    xz linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
+    xz linux-${KERNEL_VERSION}-v8+/sound/usb/snd-usb-audio.ko
+fi
+
 echo "!!!  Creating archive  !!!"
 rm -rf modules-rpi-${KERNEL_VERSION}-motivo/
 mkdir -p modules-rpi-${KERNEL_VERSION}-motivo/boot/overlays
