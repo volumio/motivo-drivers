@@ -6,7 +6,7 @@ KERNEL_VERSION="6.1.69"
 case $KERNEL_VERSION in
     "6.1.69")
       KERNEL_COMMIT="ec8e8136d773de83e313aaf983e664079cce2815"
-      PATCH="custom-6.1.x.patch"
+      PATCH="motivo-6.1.y.patch"
       ;;
     "6.1.61")
       KERNEL_COMMIT="d1ba55dafdbd33cfb938bca7ec325aafc1190596"
