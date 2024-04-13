@@ -1,9 +1,13 @@
 #!/bin/bash
 
 CPU=4
-KERNEL_VERSION="5.10.95"
+KERNEL_VERSION="6.1.69"
 
 case $KERNEL_VERSION in
+    "6.1.69")
+      KERNEL_COMMIT="ec8e8136d773de83e313aaf983e664079cce2815"
+      PATCH="custom-6.1.x.patch"
+      ;;
     "6.1.61")
       KERNEL_COMMIT="d1ba55dafdbd33cfb938bca7ec325aafc1190596"
       PATCH="motivo-6.1.x.patch"
@@ -54,11 +58,11 @@ MAJOR_VERSION=$(echo "$KERNEL_VERSION" | cut -d '.' -f 1)
 MINOR_VERSION=$(echo "$KERNEL_VERSION" | cut -d '.' -f 2)
 
 if [ "$MAJOR_VERSION" -gt 5 ] || ([ "$MAJOR_VERSION" -eq 5 ] && [ "$MINOR_VERSION" -ge 15 ]); then
-    echo "!!!  Compress modules with XZ  !!!"
-    xz linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
-    xz linux-${KERNEL_VERSION}-v7l+/sound/usb/snd-usb-audio.ko
-    xz linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
-    xz linux-${KERNEL_VERSION}-v8+/sound/usb/snd-usb-audio.ko
+    echo "!!!  Compress modules with xz -f  !!!"
+    xz -f linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
+    xz -f linux-${KERNEL_VERSION}-v7l+/sound/usb/snd-usb-audio.ko
+    xz -f linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
+    xz -f linux-${KERNEL_VERSION}-v8+/sound/usb/snd-usb-audio.ko
 fi
 
 echo "!!!  Creating archive  !!!"
