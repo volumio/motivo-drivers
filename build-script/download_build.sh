@@ -1,9 +1,13 @@
 #!/bin/bash
 
 CPU=4
-KERNEL_VERSION="6.1.69"
+KERNEL_VERSION="6.1.77"
 
 case $KERNEL_VERSION in
+    "6.1.77")
+      KERNEL_COMMIT="5fc4f643d2e9c5aa972828705a902d184527ae3f"
+      PATCH="motivo-6.1.z.patch"
+      ;;
     "6.1.69")
       KERNEL_COMMIT="ec8e8136d773de83e313aaf983e664079cce2815"
       PATCH="motivo-6.1.y.patch"
