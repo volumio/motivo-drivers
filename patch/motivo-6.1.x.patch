@@ -1,8 +1,8 @@
 diff --git a/arch/arm/boot/dts/overlays/Makefile b/arch/arm/boot/dts/overlays/Makefile
-index 5b1380b55..6caef6084 100644
+index 57e2577c9..eb82fe80e 100644
 --- a/arch/arm/boot/dts/overlays/Makefile
 +++ b/arch/arm/boot/dts/overlays/Makefile
-@@ -172,6 +172,11 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
+@@ -171,6 +171,11 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
  	mipi-dbi-spi.dtbo \
  	mlx90640.dtbo \
  	mmc.dtbo \
@@ -139,7 +139,7 @@ index 000000000..9626d3e7e
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 new file mode 100644
-index 000000000..2f63504d9
+index 000000000..5c0fa816c
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 @@ -0,0 +1,121 @@
@@ -641,6 +641,28 @@ index 000000000..ce69c069f
 +        };
 +    };
 +};
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index 0cb646cb0..244fda916 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -452,7 +452,7 @@ int drm_get_panel_orientation_quirk(int width, int height)
+ 			return data->orientation;
+ 	}
+ 
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
+@@ -461,7 +461,7 @@ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ /* There are no quirks for non x86 devices yet */
+ int drm_get_panel_orientation_quirk(int width, int height)
+ {
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
 diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
 index dfb90334a..975a1a8b7 100644
 --- a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
@@ -1443,7 +1465,7 @@ index dfb90334a..975a1a8b7 100644
  };
  MODULE_DEVICE_TABLE(of, ili9881c_of_match);
 diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index d21322395..19a121a28 100644
+index 2db4fc95f..8116ab43f 100644
 --- a/sound/usb/quirks.c
 +++ b/sound/usb/quirks.c
 @@ -1874,6 +1874,16 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
@@ -1497,7 +1519,7 @@ index d21322395..19a121a28 100644
  		if (fp->altsetting == 2)
  			return SNDRV_PCM_FMTBIT_DSD_U32_BE;
  		break;
-@@ -2207,6 +2228,10 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+@@ -2201,6 +2222,10 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
  		   QUIRK_FLAG_DSD_RAW),
  	VENDOR_FLG(0x22d9, /* Oppo */
  		   QUIRK_FLAG_DSD_RAW),
@@ -1508,7 +1530,7 @@ index d21322395..19a121a28 100644
  	VENDOR_FLG(0x23ba, /* Playback Design */
  		   QUIRK_FLAG_CTL_MSG_DELAY | QUIRK_FLAG_IFACE_DELAY |
  		   QUIRK_FLAG_DSD_RAW),
-@@ -2222,6 +2247,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+@@ -2216,6 +2241,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
  		   QUIRK_FLAG_DSD_RAW),
  	VENDOR_FLG(0x2d87, /* Cayin device */
  		   QUIRK_FLAG_DSD_RAW),

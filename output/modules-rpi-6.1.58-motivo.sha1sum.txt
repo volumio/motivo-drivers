@@ -1,1 +1,1 @@
-86178b10e671e2bb038cb6f3c84750399b3cd411  modules-rpi-6.1.58-motivo.tar.gz
+a42a10b286807ac67ad2bef0bcb0cdcafb61afd6  modules-rpi-6.1.58-motivo.tar.gz
