@@ -641,6 +641,28 @@ index 000000000..ce69c069f
 +        };
 +    };
 +};
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index d5c15292a..0c26ac26a 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -468,7 +468,7 @@ int drm_get_panel_orientation_quirk(int width, int height)
+ 			return data->orientation;
+ 	}
+ 
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
+@@ -477,7 +477,7 @@ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ /* There are no quirks for non x86 devices yet */
+ int drm_get_panel_orientation_quirk(int width, int height)
+ {
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
 diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
 index dfb90334a..975a1a8b7 100644
 --- a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
