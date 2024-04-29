@@ -139,7 +139,7 @@ index 000000000..9626d3e7e
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 new file mode 100644
-index 000000000..2f63504d9
+index 000000000..5c0fa816c
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 @@ -0,0 +1,121 @@
@@ -641,6 +641,28 @@ index 000000000..ce69c069f
 +        };
 +    };
 +};
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index ce739ba45..757c6ae7a 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -367,7 +367,7 @@ int drm_get_panel_orientation_quirk(int width, int height)
+ 			return data->orientation;
+ 	}
+ 
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
+@@ -376,7 +376,7 @@ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ /* There are no quirks for non x86 devices yet */
+ int drm_get_panel_orientation_quirk(int width, int height)
+ {
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
 diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
 index 8eafb2aa1..e60beccbf 100644
 --- a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
