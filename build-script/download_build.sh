@@ -91,8 +91,10 @@ MINOR_VERSION=$(echo "$KERNEL_VERSION" | cut -d '.' -f 2)
 if [ "$MAJOR_VERSION" -gt 5 ] || ([ "$MAJOR_VERSION" -eq 5 ] && [ "$MINOR_VERSION" -ge 15 ]); then
     echo "!!!  Compress modules with xz -f  !!!"
     xz -f linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
+    xz -f linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/drm_panel_orientation_quirks.ko
     xz -f linux-${KERNEL_VERSION}-v7l+/sound/usb/snd-usb-audio.ko
     xz -f linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
+    xz -f linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/drm_panel_orientation_quirks.ko
     xz -f linux-${KERNEL_VERSION}-v8+/sound/usb/snd-usb-audio.ko
 fi
 
@@ -104,10 +106,12 @@ mkdir -p modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+
 mkdir -p modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
 mkdir -p modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/usb/
 cp linux-${KERNEL_VERSION}-v7l+/arch/arm/boot/dts/overlays/motivo*.dtbo modules-rpi-${KERNEL_VERSION}-motivo/boot/overlays
-cp linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
-cp linux-${KERNEL_VERSION}-v7l+/sound/usb/snd-usb-audio.ko modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/usb/
-cp linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
-cp linux-${KERNEL_VERSION}-v8+/sound/usb/snd-usb-audio.ko modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/usb/
+cp linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko* modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
+cp linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/drm_panel_orientation_quirks.ko* modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/
+cp linux-${KERNEL_VERSION}-v7l+/sound/usb/snd-usb-audio.ko* modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/usb/
+cp linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko* modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
+cp linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/drm_panel_orientation_quirks.ko* modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/
+cp linux-${KERNEL_VERSION}-v8+/sound/usb/snd-usb-audio.ko* modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/usb/
 tar -czvf modules-rpi-${KERNEL_VERSION}-motivo.tar.gz modules-rpi-${KERNEL_VERSION}-motivo/ --owner=0 --group=0
 md5sum modules-rpi-${KERNEL_VERSION}-motivo.tar.gz > modules-rpi-${KERNEL_VERSION}-motivo.md5sum.txt
 sha1sum modules-rpi-${KERNEL_VERSION}-motivo.tar.gz > modules-rpi-${KERNEL_VERSION}-motivo.sha1sum.txt
