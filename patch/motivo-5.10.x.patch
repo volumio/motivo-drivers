@@ -1,5 +1,5 @@
 diff --git a/arch/arm/boot/dts/overlays/Makefile b/arch/arm/boot/dts/overlays/Makefile
-index bff07c174..0d5b36b2e 100644
+index 6fcacdccb..53b4cbffa 100644
 --- a/arch/arm/boot/dts/overlays/Makefile
 +++ b/arch/arm/boot/dts/overlays/Makefile
 @@ -136,6 +136,11 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
@@ -139,7 +139,7 @@ index 000000000..9626d3e7e
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 new file mode 100644
-index 000000000..2f63504d9
+index 000000000..5c0fa816c
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 @@ -0,0 +1,121 @@
@@ -641,6 +641,28 @@ index 000000000..ce69c069f
 +        };
 +    };
 +};
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index 9d1bd8f49..e9213d5a3 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -331,7 +331,7 @@ int drm_get_panel_orientation_quirk(int width, int height)
+ 			return data->orientation;
+ 	}
+ 
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
+@@ -340,7 +340,7 @@ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ /* There are no quirks for non x86 devices yet */
+ int drm_get_panel_orientation_quirk(int width, int height)
+ {
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
 diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
 index 6e03d9b0b..b0b5d172c 100644
 --- a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
@@ -1501,7 +1523,7 @@ index 6e03d9b0b..b0b5d172c 100644
  };
  MODULE_DEVICE_TABLE(of, ili9881c_of_match);
 diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 2337707dd..002d94aa5 100644
+index e5cb6daf2..bf4f4638d 100644
 --- a/sound/usb/quirks.c
 +++ b/sound/usb/quirks.c
 @@ -1749,23 +1749,51 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
