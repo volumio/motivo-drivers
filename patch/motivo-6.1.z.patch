@@ -1,5 +1,5 @@
 diff --git a/arch/arm/boot/dts/overlays/Makefile b/arch/arm/boot/dts/overlays/Makefile
-index dd34b0915..b4965b599 100644
+index dd34b09..b4965b5 100644
 --- a/arch/arm/boot/dts/overlays/Makefile
 +++ b/arch/arm/boot/dts/overlays/Makefile
 @@ -172,6 +172,11 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
@@ -16,7 +16,7 @@ index dd34b0915..b4965b599 100644
  	ov5647.dtbo \
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-a-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-a-overlay.dts
 new file mode 100644
-index 000000000..9626d3e7e
+index 0000000..9626d3e
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-a-overlay.dts
 @@ -0,0 +1,117 @@
@@ -139,7 +139,7 @@ index 000000000..9626d3e7e
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 new file mode 100644
-index 000000000..5c0fa816c
+index 0000000..5c0fa81
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 @@ -0,0 +1,121 @@
@@ -266,7 +266,7 @@ index 000000000..5c0fa816c
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-c-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-c-overlay.dts
 new file mode 100644
-index 000000000..b0f983ce9
+index 0000000..b0f983c
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-c-overlay.dts
 @@ -0,0 +1,121 @@
@@ -393,7 +393,7 @@ index 000000000..b0f983ce9
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-d-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-d-overlay.dts
 new file mode 100644
-index 000000000..00e5e41fc
+index 0000000..00e5e41
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-d-overlay.dts
 @@ -0,0 +1,121 @@
@@ -520,7 +520,7 @@ index 000000000..00e5e41fc
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-e-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-e-overlay.dts
 new file mode 100644
-index 000000000..ce69c069f
+index 0000000..ce69c06
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-e-overlay.dts
 @@ -0,0 +1,117 @@
@@ -641,8 +641,30 @@ index 000000000..ce69c069f
 +        };
 +    };
 +};
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index d5c1529..0c26ac2 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -468,7 +468,7 @@ int drm_get_panel_orientation_quirk(int width, int height)
+ 			return data->orientation;
+ 	}
+ 
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
+@@ -477,7 +477,7 @@ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ /* There are no quirks for non x86 devices yet */
+ int drm_get_panel_orientation_quirk(int width, int height)
+ {
+-	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+ }
+ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
+ 
 diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
-index dfb90334a..975a1a8b7 100644
+index dfb9033..975a1a8 100644
 --- a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
 +++ b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
 @@ -4,6 +4,7 @@
@@ -1443,7 +1465,7 @@ index dfb90334a..975a1a8b7 100644
  };
  MODULE_DEVICE_TABLE(of, ili9881c_of_match);
 diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index e91216e9f..f875de64e 100644
+index e91216e..f875de6 100644
 --- a/sound/usb/quirks.c
 +++ b/sound/usb/quirks.c
 @@ -1874,6 +1874,16 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
