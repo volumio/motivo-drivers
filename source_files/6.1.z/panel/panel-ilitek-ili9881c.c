@@ -1796,7 +1796,7 @@ static int ili9881c_prepare(struct drm_panel *panel)
 	msleep(20);
 
 	gpiod_set_value_cansleep(ctx->reset, 0);
-	msleep(100);
+	msleep(20);
 
 	for (i = 0; i < ctx->desc->init_length; i++) {
 		const struct ili9881c_instr *instr = &ctx->desc->init[i];
@@ -1830,7 +1830,7 @@ static int ili9881c_enable(struct drm_panel *panel)
 {
 	struct ili9881c *ctx = panel_to_ili9881c(panel);
 
-	msleep(150);
+	msleep(120);
 
 	mipi_dsi_dcs_set_display_on(ctx->dsi);
 
@@ -2065,7 +2065,6 @@ static int ili9881c_dsi_probe(struct mipi_dsi_device *dsi)
 	ctx->dsi = dsi;
 	ctx->desc = of_device_get_match_data(&dsi->dev);
 
-	ctx->panel.prepare_upstream_first = true;
 	drm_panel_init(&ctx->panel, &dsi->dev, &ili9881c_funcs,
 		       DRM_MODE_CONNECTOR_DSI);
 
@@ -2086,6 +2085,8 @@ static int ili9881c_dsi_probe(struct mipi_dsi_device *dsi)
 		return ret;
 	}
 
+	ctx->panel.prepare_upstream_first = true;
+
 	ret = drm_panel_of_backlight(&ctx->panel);
 	if (ret)
 		return ret;
@@ -2096,11 +2097,7 @@ static int ili9881c_dsi_probe(struct mipi_dsi_device *dsi)
 	dsi->format = MIPI_DSI_FMT_RGB888;
 	dsi->lanes = 4;
 
-	ret = mipi_dsi_attach(dsi);
-	if (ret)
-		drm_panel_remove(&ctx->panel);
-
-	return ret;
+	return mipi_dsi_attach(dsi);
 }
 
 static void ili9881c_dsi_remove(struct mipi_dsi_device *dsi)
@@ -2109,6 +2106,10 @@ static void ili9881c_dsi_remove(struct mipi_dsi_device *dsi)
 
 	mipi_dsi_detach(dsi);
 	drm_panel_remove(&ctx->panel);
+/*
+	gpiod_set_value_cansleep(ctx->reset, 1);
+	regulator_disable(ctx->power);
+*/
 }
 
 static const struct ili9881c_desc lhr050h41_desc = {
