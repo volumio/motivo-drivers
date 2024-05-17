@@ -82,7 +82,7 @@ index 000000000..9626d3e7e
 +                compatible = "pwm-backlight";
 +                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
 +                default-brightness-level = <6>;
-+                pwms = <&pwm 0 200000>;
++                pwms = <&pwm 0 200000 0>;
 +                power-supply = <&vdd_3v3_reg>;
 +                status = "okay";
 +            };
@@ -205,7 +205,7 @@ index 000000000..5c0fa816c
 +                compatible = "pwm-backlight";
 +                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
 +                default-brightness-level = <6>;
-+                pwms = <&pwm 0 200000>;
++                pwms = <&pwm 0 200000 0>;
 +                power-supply = <&vdd_3v3_reg>;
 +                status = "okay";
 +            };
@@ -332,7 +332,7 @@ index 000000000..b0f983ce9
 +                compatible = "pwm-backlight";
 +                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
 +                default-brightness-level = <6>;
-+                pwms = <&pwm 0 200000>;
++                pwms = <&pwm 0 200000 0>;
 +                power-supply = <&vdd_3v3_reg>;
 +                status = "okay";
 +            };
@@ -459,7 +459,7 @@ index 000000000..00e5e41fc
 +                compatible = "pwm-backlight";
 +                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
 +                default-brightness-level = <6>;
-+                pwms = <&pwm 0 200000>;
++                pwms = <&pwm 0 200000 0>;
 +                power-supply = <&vdd_3v3_reg>;
 +                status = "okay";
 +            };
@@ -586,7 +586,7 @@ index 000000000..ce69c069f
 +                compatible = "pwm-backlight";
 +                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
 +                default-brightness-level = <6>;
-+                pwms = <&pwm 0 200000>;
++                pwms = <&pwm 0 200000 0>;
 +                power-supply = <&vdd_3v3_reg>;
 +                status = "okay";
 +            };
