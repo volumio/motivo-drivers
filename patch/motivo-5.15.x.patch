@@ -95,7 +95,7 @@ index 000000000..9626d3e7e
 +            status = "okay";
 +            pinctrl-names = "default";
 +            pinctrl-0 = <&i2c6_pins>;
-+            clock-frequency = <100000>;
++            clock-frequency = <400000>;
 +        };
 +    };
 +
@@ -218,7 +218,7 @@ index 000000000..5c0fa816c
 +            status = "okay";
 +            pinctrl-names = "default";
 +            pinctrl-0 = <&i2c6_pins>;
-+            clock-frequency = <100000>;
++            clock-frequency = <400000>;
 +        };
 +    };
 +
@@ -345,7 +345,7 @@ index 000000000..b0f983ce9
 +            status = "okay";
 +            pinctrl-names = "default";
 +            pinctrl-0 = <&i2c6_pins>;
-+            clock-frequency = <100000>;
++            clock-frequency = <400000>;
 +        };
 +    };
 +
@@ -472,7 +472,7 @@ index 000000000..00e5e41fc
 +            status = "okay";
 +            pinctrl-names = "default";
 +            pinctrl-0 = <&i2c6_pins>;
-+            clock-frequency = <100000>;
++            clock-frequency = <400000>;
 +        };
 +    };
 +
@@ -599,7 +599,7 @@ index 000000000..ce69c069f
 +            status = "okay";
 +            pinctrl-names = "default";
 +            pinctrl-0 = <&i2c6_pins>;
-+            clock-frequency = <100000>;
++            clock-frequency = <400000>;
 +        };
 +    };
 +
