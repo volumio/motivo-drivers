@@ -1,1 +1,1 @@
-97d5303d3aa0ebf99aa57a2c89542aa7  modules-rpi-6.6.30-motivo.tar.gz
+afd6aec4d6c6c80ab228ddc0eb0b7fa3  modules-rpi-6.6.30-motivo.tar.gz

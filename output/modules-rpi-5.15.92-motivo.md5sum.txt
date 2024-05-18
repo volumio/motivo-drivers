@@ -1,1 +1,1 @@
-5f8594095b3625da304a181f47c94bbc  modules-rpi-5.15.92-motivo.tar.gz
+f27483f34d90f33f913bc4b344c7ad07  modules-rpi-5.15.92-motivo.tar.gz
