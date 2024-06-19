@@ -93,13 +93,19 @@ MAJOR_VERSION=$(echo "$KERNEL_VERSION" | cut -d '.' -f 1)
 MINOR_VERSION=$(echo "$KERNEL_VERSION" | cut -d '.' -f 2)
 
 if [ "$MAJOR_VERSION" -gt 5 ] || ([ "$MAJOR_VERSION" -eq 5 ] && [ "$MINOR_VERSION" -ge 15 ]); then
-    echo "!!!  Compress modules with xz -f  !!!"
+    echo "!!!  Compress modules with xz  !!!"
     xz -f linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
     xz -f linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/drm_panel_orientation_quirks.ko
     xz -f linux-${KERNEL_VERSION}-v7l+/sound/usb/snd-usb-audio.ko
     xz -f linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko
     xz -f linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/drm_panel_orientation_quirks.ko
     xz -f linux-${KERNEL_VERSION}-v8+/sound/usb/snd-usb-audio.ko
+fi
+
+if [ "$MAJOR_VERSION" -gt 6 ] || ([ "$MAJOR_VERSION" -eq 6 ] && [ "$MINOR_VERSION" -ge 0 ]); then
+    echo "!!!  Compress Andrew's driver modules with xz  !!!"
+    xz -f linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-dsi-mt.ko
+    xz -f linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-dsi-mt.ko
 fi
 
 echo "!!!  Creating archive  !!!"

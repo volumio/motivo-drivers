@@ -265,7 +265,8 @@ static const struct panel_init_cmd mt1280800a_init_cmd[] = {
 
 	_INIT_SWITCH_PAGE_CMD(0x01),
 	// Direction rotate selection holds drm_quirks in place
-	_INIT_DCS_CMD(0x22, 0x0B),
+	_INIT_DCS_CMD(0x22, 0x33),
+	//_INIT_DCS_CMD(0x22, 0x0B),
 	//_INIT_DCS_CMD(0x22, 0x0A),
 	// Direction rotate selection end
 	_INIT_DCS_CMD(0x31, 0x00),
@@ -380,20 +381,20 @@ static const struct panel_init_cmd mt1280800b_init_cmd[] = {
 	//GIP_1
 	_INIT_DCS_CMD(0x01, 0x00),
 	_INIT_DCS_CMD(0x02, 0x00),
-	_INIT_DCS_CMD(0x03, 0x73),
-	_INIT_DCS_CMD(0x04, 0x00),
-	_INIT_DCS_CMD(0x05, 0x00),
-	_INIT_DCS_CMD(0x06, 0x0A),
-	_INIT_DCS_CMD(0x07, 0x00),
-	_INIT_DCS_CMD(0x08, 0x00),
-	_INIT_DCS_CMD(0x09, 0x20),
-	_INIT_DCS_CMD(0x0a, 0x20),
+	_INIT_DCS_CMD(0x03, 0x53),
+	_INIT_DCS_CMD(0x04, 0x53),
+	_INIT_DCS_CMD(0x05, 0x13),
+	_INIT_DCS_CMD(0x06, 0x04),
+	_INIT_DCS_CMD(0x07, 0x02),
+	_INIT_DCS_CMD(0x08, 0x02),
+	_INIT_DCS_CMD(0x09, 0x00),
+	_INIT_DCS_CMD(0x0a, 0x00),
 	_INIT_DCS_CMD(0x0b, 0x00),
 	_INIT_DCS_CMD(0x0c, 0x00),
 	_INIT_DCS_CMD(0x0d, 0x00),
 	_INIT_DCS_CMD(0x0e, 0x00),
-	_INIT_DCS_CMD(0x0f, 0x1E),
-	_INIT_DCS_CMD(0x10, 0x1E),
+	_INIT_DCS_CMD(0x0f, 0x00),
+	_INIT_DCS_CMD(0x10, 0x00),
 	_INIT_DCS_CMD(0x11, 0x00),
 	_INIT_DCS_CMD(0x12, 0x00),
 	_INIT_DCS_CMD(0x13, 0x00),
@@ -403,187 +404,182 @@ static const struct panel_init_cmd mt1280800b_init_cmd[] = {
 	_INIT_DCS_CMD(0x17, 0x00),
 	_INIT_DCS_CMD(0x18, 0x00),
 	_INIT_DCS_CMD(0x19, 0x00),
-	_INIT_DCS_CMD(0x1A, 0x00),
-	_INIT_DCS_CMD(0x1B, 0x00),
-	_INIT_DCS_CMD(0x1C, 0x00),
-	_INIT_DCS_CMD(0x1D, 0x00),
-	_INIT_DCS_CMD(0x1E, 0x40),
-	_INIT_DCS_CMD(0x1F, 0x80),
-	_INIT_DCS_CMD(0x20, 0x06),
-	_INIT_DCS_CMD(0x21, 0x01),
+	_INIT_DCS_CMD(0x1a, 0x00),
+	_INIT_DCS_CMD(0x1b, 0x00),
+	_INIT_DCS_CMD(0x1c, 0x00),
+	_INIT_DCS_CMD(0x1d, 0x00),
+	_INIT_DCS_CMD(0x1e, 0xc0),
+	_INIT_DCS_CMD(0x1f, 0x80),
+	_INIT_DCS_CMD(0x20, 0x02),
+	_INIT_DCS_CMD(0x21, 0x09),
 	_INIT_DCS_CMD(0x22, 0x00),
 	_INIT_DCS_CMD(0x23, 0x00),
 	_INIT_DCS_CMD(0x24, 0x00),
 	_INIT_DCS_CMD(0x25, 0x00),
 	_INIT_DCS_CMD(0x26, 0x00),
 	_INIT_DCS_CMD(0x27, 0x00),
-	_INIT_DCS_CMD(0x28, 0x33),
+	_INIT_DCS_CMD(0x28, 0x55),
 	_INIT_DCS_CMD(0x29, 0x03),
-	_INIT_DCS_CMD(0x2A, 0x00),
-	_INIT_DCS_CMD(0x2B, 0x00),
-	_INIT_DCS_CMD(0x2C, 0x00),
-	_INIT_DCS_CMD(0x2D, 0x00),
-	_INIT_DCS_CMD(0x2E, 0x00),
-	_INIT_DCS_CMD(0x2F, 0x00),
+	_INIT_DCS_CMD(0x2a, 0x00),
+	_INIT_DCS_CMD(0x2b, 0x00),
+	_INIT_DCS_CMD(0x2c, 0x00),
+	_INIT_DCS_CMD(0x2d, 0x00),
+	_INIT_DCS_CMD(0x2e, 0x00),
+	_INIT_DCS_CMD(0x2f, 0x00),
 	_INIT_DCS_CMD(0x30, 0x00),
 	_INIT_DCS_CMD(0x31, 0x00),
 	_INIT_DCS_CMD(0x32, 0x00),
 	_INIT_DCS_CMD(0x33, 0x00),
-	_INIT_DCS_CMD(0x34, 0x04),
+	_INIT_DCS_CMD(0x34, 0x00),
 	_INIT_DCS_CMD(0x35, 0x00),
 	_INIT_DCS_CMD(0x36, 0x00),
 	_INIT_DCS_CMD(0x37, 0x00),
-	_INIT_DCS_CMD(0x38, 0x3C),
+	_INIT_DCS_CMD(0x38, 0x3C),	//VDD1&2 toggle 1sec
 	_INIT_DCS_CMD(0x39, 0x00),
-	_INIT_DCS_CMD(0x3A, 0x00),
-	_INIT_DCS_CMD(0x3B, 0x00),
-	_INIT_DCS_CMD(0x3C, 0x00),
-	_INIT_DCS_CMD(0x3D, 0x00),
-	_INIT_DCS_CMD(0x3E, 0x00),
-	_INIT_DCS_CMD(0x3F, 0x00),
+	_INIT_DCS_CMD(0x3a, 0x00),
+	_INIT_DCS_CMD(0x3b, 0x00),
+	_INIT_DCS_CMD(0x3c, 0x00),
+	_INIT_DCS_CMD(0x3d, 0x00),
+	_INIT_DCS_CMD(0x3e, 0x00),
+	_INIT_DCS_CMD(0x3f, 0x00),
 	_INIT_DCS_CMD(0x40, 0x00),
 	_INIT_DCS_CMD(0x41, 0x00),
 	_INIT_DCS_CMD(0x42, 0x00),
 	_INIT_DCS_CMD(0x43, 0x00),
 	_INIT_DCS_CMD(0x44, 0x00),
-	_INIT_DCS_CMD(0x50, 0x10),
-	_INIT_DCS_CMD(0x51, 0x32),
-	_INIT_DCS_CMD(0x52, 0x54),
-	_INIT_DCS_CMD(0x53, 0x76),
-	_INIT_DCS_CMD(0x54, 0x98),
-	_INIT_DCS_CMD(0x55, 0xba),
-	_INIT_DCS_CMD(0x56, 0x10),
-	_INIT_DCS_CMD(0x57, 0x32),
-	_INIT_DCS_CMD(0x58, 0x54),
-	_INIT_DCS_CMD(0x59, 0x76),
-	_INIT_DCS_CMD(0x5A, 0x98),
-	_INIT_DCS_CMD(0x5B, 0xba),
-	_INIT_DCS_CMD(0x5C, 0xdc),
-	_INIT_DCS_CMD(0x5D, 0xfe),
+
+	//GIP_2
+	_INIT_DCS_CMD(0x50, 0x01),
+	_INIT_DCS_CMD(0x51, 0x23),
+	_INIT_DCS_CMD(0x52, 0x45),
+	_INIT_DCS_CMD(0x53, 0x67),
+	_INIT_DCS_CMD(0x54, 0x89),
+	_INIT_DCS_CMD(0x55, 0xab),
+	_INIT_DCS_CMD(0x56, 0x01),
+	_INIT_DCS_CMD(0x57, 0x23),
+	_INIT_DCS_CMD(0x58, 0x45),
+	_INIT_DCS_CMD(0x59, 0x67),
+	_INIT_DCS_CMD(0x5a, 0x89),
+	_INIT_DCS_CMD(0x5b, 0xab),
+	_INIT_DCS_CMD(0x5c, 0xcd),
+	_INIT_DCS_CMD(0x5d, 0xef),
 
 	//GIP_3
-	_INIT_DCS_CMD(0x5E, 0x00),
-	_INIT_DCS_CMD(0x5F, 0x01),
-	_INIT_DCS_CMD(0x60, 0x00),
-	_INIT_DCS_CMD(0x61, 0x15),
-	_INIT_DCS_CMD(0x62, 0x14),
-	_INIT_DCS_CMD(0x63, 0x0E),
-	_INIT_DCS_CMD(0x64, 0x0F),
-	_INIT_DCS_CMD(0x65, 0x0C),
-	_INIT_DCS_CMD(0x66, 0x0D),
-	_INIT_DCS_CMD(0x67, 0x06),
-	_INIT_DCS_CMD(0x68, 0x02),
-	_INIT_DCS_CMD(0x69, 0x02),
-	_INIT_DCS_CMD(0x6A, 0x02),
-	_INIT_DCS_CMD(0x6B, 0x02),
-	_INIT_DCS_CMD(0x6C, 0x02),
-	_INIT_DCS_CMD(0x6D, 0x02),
-	_INIT_DCS_CMD(0x6E, 0x07),
-	_INIT_DCS_CMD(0x6F, 0x02),
+	_INIT_DCS_CMD(0x5e, 0x01),
+	_INIT_DCS_CMD(0x5f, 0x08),	//FW_GOUT_L1   STV2_ODD
+	_INIT_DCS_CMD(0x60, 0x02),	//FW_GOUT_L2
+	_INIT_DCS_CMD(0x61, 0x02),	//FW_GOUT_L3
+	_INIT_DCS_CMD(0x62, 0x0A),	//FW_GOUT_L4   RESET_ODD
+	_INIT_DCS_CMD(0x63, 0x15),	//FW_GOUT_L5
+	_INIT_DCS_CMD(0x64, 0x14),	//FW_GOUT_L6
+	_INIT_DCS_CMD(0x65, 0x02),	//FW_GOUT_L7
+	_INIT_DCS_CMD(0x66, 0x11),	//FW_GOUT_L8   CK11
+	_INIT_DCS_CMD(0x67, 0x10),	//FW_GOUT_L9   CK9
+	_INIT_DCS_CMD(0x68, 0x02),	//FW_GOUT_L10
+	_INIT_DCS_CMD(0x69, 0x0F),	//FW_GOUT_L11   CK7
+	_INIT_DCS_CMD(0x6a, 0x0E),	//FW_GOUT_L12   CK5
+	_INIT_DCS_CMD(0x6b, 0x02),	//FW_GOUT_L13
+	_INIT_DCS_CMD(0x6c, 0x0D),	//FW_GOUT_L14   CK3
+	_INIT_DCS_CMD(0x6d, 0x0C),	//FW_GOUT_L15   CK1
+	_INIT_DCS_CMD(0x6e, 0x06),	//FW_GOUT_L16   STV1_ODD
+	_INIT_DCS_CMD(0x6f, 0x02),	//FW_GOUT_L17
+	_INIT_DCS_CMD(0x70, 0x02),	//FW_GOUT_L18
+	_INIT_DCS_CMD(0x71, 0x02),	//FW_GOUT_L19
+	_INIT_DCS_CMD(0x72, 0x02),	//FW_GOUT_L20
+	_INIT_DCS_CMD(0x73, 0x02),	//FW_GOUT_L21
+	_INIT_DCS_CMD(0x74, 0x02),	//FW_GOUT_L22
 
-	_INIT_DCS_CMD(0x70, 0x02),
-	_INIT_DCS_CMD(0x71, 0x02),
-	_INIT_DCS_CMD(0x72, 0x02),
-	_INIT_DCS_CMD(0x73, 0x02),
-	_INIT_DCS_CMD(0x74, 0x02),
-	_INIT_DCS_CMD(0x75, 0x01),
-	_INIT_DCS_CMD(0x76, 0x00),
-	_INIT_DCS_CMD(0x77, 0x14),
-	_INIT_DCS_CMD(0x78, 0x15),
-	_INIT_DCS_CMD(0x79, 0x0E),
-	_INIT_DCS_CMD(0x7A, 0x0F),
-	_INIT_DCS_CMD(0x7B, 0x0C),
-	_INIT_DCS_CMD(0x7C, 0x0D),
-	_INIT_DCS_CMD(0x7D, 0x06),
-	_INIT_DCS_CMD(0x7E, 0x02),
-	_INIT_DCS_CMD(0x7F, 0x02),
-
-	_INIT_DCS_CMD(0x80, 0x02),
-	_INIT_DCS_CMD(0x81, 0x02),
-	_INIT_DCS_CMD(0x82, 0x02),
-	_INIT_DCS_CMD(0x83, 0x02),
-	_INIT_DCS_CMD(0x84, 0x07),
-	_INIT_DCS_CMD(0x85, 0x02),
-	_INIT_DCS_CMD(0x86, 0x02),
-	_INIT_DCS_CMD(0x87, 0x02),
-	_INIT_DCS_CMD(0x88, 0x02),
-	_INIT_DCS_CMD(0x89, 0x02),
-	_INIT_DCS_CMD(0x8A, 0x02),
+	_INIT_DCS_CMD(0x75, 0x06),	//BW_GOUT_L1   STV2_ODD
+	_INIT_DCS_CMD(0x76, 0x02),	//BW_GOUT_L2
+	_INIT_DCS_CMD(0x77, 0x02),	//BW_GOUT_L3
+	_INIT_DCS_CMD(0x78, 0x0A),	//BW_GOUT_L4   RESET_ODD
+	_INIT_DCS_CMD(0x79, 0x15),	//BW_GOUT_L5
+	_INIT_DCS_CMD(0x7a, 0x14),	//BW_GOUT_L6
+	_INIT_DCS_CMD(0x7b, 0x02),	//BW_GOUT_L7
+	_INIT_DCS_CMD(0x7c, 0x10),	//BW_GOUT_L8    CK11
+	_INIT_DCS_CMD(0x7d, 0x11),	//BW_GOUT_L9    CK9
+	_INIT_DCS_CMD(0x7e, 0x02),	//BW_GOUT_L10
+	_INIT_DCS_CMD(0x7f, 0x0C),	//BW_GOUT_L11   CK7
+	_INIT_DCS_CMD(0x80, 0x0D),	//BW_GOUT_L12   CK5
+	_INIT_DCS_CMD(0x81, 0x02),	//BW_GOUT_L13
+	_INIT_DCS_CMD(0x82, 0x0E),	//BW_GOUT_L14   CK3
+	_INIT_DCS_CMD(0x83, 0x0F),	//BW_GOUT_L15   CK1
+	_INIT_DCS_CMD(0x84, 0x08),	//BW_GOUT_L16   STV1_ODD
+	_INIT_DCS_CMD(0x85, 0x02),	//BW_GOUT_L17
+	_INIT_DCS_CMD(0x86, 0x02),	//BW_GOUT_L18
+	_INIT_DCS_CMD(0x87, 0x02),	//BW_GOUT_L19
+	_INIT_DCS_CMD(0x88, 0x02),	//BW_GOUT_L20
+	_INIT_DCS_CMD(0x89, 0x02),	//BW_GOUT_L21
+	_INIT_DCS_CMD(0x8A, 0x02),	//BW_GOUT_L22
 
 	_INIT_SWITCH_PAGE_CMD(0x04),
 	_INIT_DCS_CMD(0x6C, 0x15),
-	_INIT_DCS_CMD(0x6E, 0x2A),
-
-	//clamp 15V
-	_INIT_DCS_CMD(0x6F, 0x35),
-	_INIT_DCS_CMD(0x3A, 0x92),
-	_INIT_DCS_CMD(0x8D, 0x1F),
+	_INIT_DCS_CMD(0x6E, 0x30),	//VGH clamp 16.08V
+	_INIT_DCS_CMD(0x6F, 0x33),	// reg vcl + pumping ratio VGH=3x VGL=-2x
+	_INIT_DCS_CMD(0x8D, 0x1F),	//VGL clamp -12.03V
 	_INIT_DCS_CMD(0x87, 0xBA),
 	_INIT_DCS_CMD(0x26, 0x76),
 	_INIT_DCS_CMD(0xB2, 0xD1),
-	_INIT_DCS_CMD(0xB5, 0x27),
-	_INIT_DCS_CMD(0x31, 0x75),
-	_INIT_DCS_CMD(0x30, 0x03),
-	_INIT_DCS_CMD(0x3B, 0x98),
-	_INIT_DCS_CMD(0x35, 0x17),
+	_INIT_DCS_CMD(0x35, 0x1F),
 	_INIT_DCS_CMD(0x33, 0x14),
+	_INIT_DCS_CMD(0x3A, 0xA9),
+	_INIT_DCS_CMD(0x3B, 0x98),
 	_INIT_DCS_CMD(0x38, 0x01),
 	_INIT_DCS_CMD(0x39, 0x00),
-
-	// Bist Mode  Page4 0x2F 0x01
-	//_INIT_SWITCH_PAGE_CMD(0x04),
+	// Bist Mode scope Page4 set with parameters: 0x2F 0x01
 	//_INIT_DCS_CMD(0x2F, 0x01),
 
 	_INIT_SWITCH_PAGE_CMD(0x01),
-	_INIT_DCS_CMD(0x22, 0x0B),
-	_INIT_DCS_CMD(0x31, 0x00),
-	_INIT_DCS_CMD(0x53, 0x63),
-	_INIT_DCS_CMD(0x55, 0x69),
-	_INIT_DCS_CMD(0x50, 0xC7),
-	_INIT_DCS_CMD(0x51, 0xC2),
-	_INIT_DCS_CMD(0x60, 0x26),
+	_INIT_DCS_CMD(0x22, 0x0A),
+	_INIT_DCS_CMD(0x31, 0x00),	//column inversion
+	_INIT_DCS_CMD(0x50, 0xC0),	//VREG1OUT=5V
+	_INIT_DCS_CMD(0x51, 0xC0),	//VREG2OUT=-5V
+	_INIT_DCS_CMD(0x53, 0x47),	//VCOM1
+	_INIT_DCS_CMD(0x55, 0x7A),	//VCOM2
+	_INIT_DCS_CMD(0x60, 0x28),	//SDT
+	_INIT_DCS_CMD(0x2E, 0xC8),	//1280 GATE NL SEL
 
-	_INIT_DCS_CMD(0xA0, 0x08),
-	_INIT_DCS_CMD(0xA1, 0x0F),
-	_INIT_DCS_CMD(0xA2, 0x25),
-	_INIT_DCS_CMD(0xA3, 0x01),
-	_INIT_DCS_CMD(0xA4, 0x23),
-	_INIT_DCS_CMD(0xA5, 0x18),
-	_INIT_DCS_CMD(0xA6, 0x11),
-	_INIT_DCS_CMD(0xA7, 0x1A),
-	_INIT_DCS_CMD(0xA8, 0x81),
-	_INIT_DCS_CMD(0xA9, 0x19),
-	_INIT_DCS_CMD(0xAA, 0x26),
-	_INIT_DCS_CMD(0xAB, 0x7C),
-	_INIT_DCS_CMD(0xAC, 0x24),
-	_INIT_DCS_CMD(0xAD, 0x1E),
-	_INIT_DCS_CMD(0xAE, 0x5C),
-	_INIT_DCS_CMD(0xAF, 0x2A),
-	_INIT_DCS_CMD(0xB0, 0x2B),
-	_INIT_DCS_CMD(0xB1, 0x50),
-	_INIT_DCS_CMD(0xB2, 0x5C),
-	_INIT_DCS_CMD(0xB3, 0x39),
+	_INIT_DCS_CMD(0xA0, 0x01),	//VP255 Gamma P
+	_INIT_DCS_CMD(0xA1, 0x10),	//VP251
+	_INIT_DCS_CMD(0xA2, 0x1B),	//VP247
+	_INIT_DCS_CMD(0xA3, 0x0C),	//VP243
+	_INIT_DCS_CMD(0xA4, 0x14),	//VP239
+	_INIT_DCS_CMD(0xA5, 0x25),	//VP231
+	_INIT_DCS_CMD(0xA6, 0x1A),	//VP219
+	_INIT_DCS_CMD(0xA7, 0x1D),	//VP203
+	_INIT_DCS_CMD(0xA8, 0x68),	//VP175
+	_INIT_DCS_CMD(0xA9, 0x1B),	//VP144
+	_INIT_DCS_CMD(0xAA, 0x26),	//VP111
+	_INIT_DCS_CMD(0xAB, 0x5B),	//VP80
+	_INIT_DCS_CMD(0xAC, 0x1B),	//VP52
+	_INIT_DCS_CMD(0xAD, 0x17),	//VP36
+	_INIT_DCS_CMD(0xAE, 0x4F),	//VP24
+	_INIT_DCS_CMD(0xAF, 0x24),	//VP16
+	_INIT_DCS_CMD(0xB0, 0x2A),	//VP12
+	_INIT_DCS_CMD(0xB1, 0x4E),	//VP8
+	_INIT_DCS_CMD(0xB2, 0x5F),	//VP4
+	_INIT_DCS_CMD(0xB3, 0x39),	//VP0
 
-	_INIT_DCS_CMD(0xC0, 0x08),
-	_INIT_DCS_CMD(0xC1, 0x1F),
-	_INIT_DCS_CMD(0xC2, 0x24),
-	_INIT_DCS_CMD(0xC3, 0x1D),
-	_INIT_DCS_CMD(0xC4, 0x04),
-	_INIT_DCS_CMD(0xC5, 0x32),
-	_INIT_DCS_CMD(0xC6, 0x24),
-	_INIT_DCS_CMD(0xC7, 0x1F),
-	_INIT_DCS_CMD(0xC8, 0x90),
-	_INIT_DCS_CMD(0xC9, 0x20),
-	_INIT_DCS_CMD(0xCA, 0x2C),
-	_INIT_DCS_CMD(0xCB, 0x82),
-	_INIT_DCS_CMD(0xCC, 0x19),
-	_INIT_DCS_CMD(0xCD, 0x22),
-	_INIT_DCS_CMD(0xCE, 0x4E),
-	_INIT_DCS_CMD(0xCF, 0x28),
-	_INIT_DCS_CMD(0xD0, 0x2D),
-	_INIT_DCS_CMD(0xD1, 0x51),
-	_INIT_DCS_CMD(0xD2, 0x5D),
-	_INIT_DCS_CMD(0xD3, 0x39),
+	_INIT_DCS_CMD(0xC0, 0x0F),	//VN255 GAMMA N
+	_INIT_DCS_CMD(0xC1, 0x1B),	//VN251
+	_INIT_DCS_CMD(0xC2, 0x27),	//VN247
+	_INIT_DCS_CMD(0xC3, 0x16),	//VN243
+	_INIT_DCS_CMD(0xC4, 0x14),	//VN239
+	_INIT_DCS_CMD(0xC5, 0x28),	//VN231
+	_INIT_DCS_CMD(0xC6, 0x1D),	//VN219
+	_INIT_DCS_CMD(0xC7, 0x21),	//VN203
+	_INIT_DCS_CMD(0xC8, 0x6C),	//VN175
+	_INIT_DCS_CMD(0xC9, 0x1B),	//VN144
+	_INIT_DCS_CMD(0xCA, 0x26),	//VN111
+	_INIT_DCS_CMD(0xCB, 0x5B),	//VN80
+	_INIT_DCS_CMD(0xCC, 0x1B),	//VN52
+	_INIT_DCS_CMD(0xCD, 0x1B),	//VN36
+	_INIT_DCS_CMD(0xCE, 0x4F),	//VN24
+	_INIT_DCS_CMD(0xCF, 0x24),	//VN16
+	_INIT_DCS_CMD(0xD0, 0x2A),	//VN12
+	_INIT_DCS_CMD(0xD1, 0x4E),	//VN8
+	_INIT_DCS_CMD(0xD2, 0x5F),	//VN4
+	_INIT_DCS_CMD(0xD3, 0x39),	//VN0
 
 	_INIT_SWITCH_PAGE_CMD(0x00),
 	//PWM
@@ -709,12 +705,18 @@ static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 
 	ret = mipi_dsi_dcs_set_display_off(dsi);
-	if (ret < 0)
+	if (ret < 0) {
+		dev_err(&dsi->dev, "Failed to set display off: %d\n", ret);
 		return ret;
+	}
+
+	msleep(5);
 
 	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-	if (ret < 0)
+	if (ret < 0) {
+		dev_err(&dsi->dev, "Failed to enter sleep mode: %d\n", ret);
 		return ret;
+	}
 
 	return 0;
 }
@@ -722,10 +724,8 @@ static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
 static int mtdsi_disable(struct drm_panel *panel)
 {
 	struct mtdsi *ctx = to_mtdsi(panel);
-	struct mipi_dsi_device *dsi = ctx->dsi;
 	int ret;
 
-	mtdsi_switch_page(dsi, 0x00);
 	ret = mtdsi_enter_sleep_mode(ctx);
 	if (ret < 0) {
 		dev_err(panel->dev, "Failed to set panel off: %d\n", ret);
@@ -753,19 +753,14 @@ static int mtdsi_prepare(struct drm_panel *panel)
 	struct mtdsi *ctx = to_mtdsi(panel);
 	int ret;
 
-	gpiod_set_value_cansleep(ctx->reset, 0);
-	usleep_range(1000, 1500);
-
 	ret = regulator_enable(ctx->power);
 
-	usleep_range(10000, 11000);
+	usleep_range(1000, 2000);
 
 	// MIPI needs to keep the LP11 state before the lcm_reset pin is pulled high
 	mipi_dsi_dcs_nop(ctx->dsi);
 	usleep_range(1000, 2000);
 
-	gpiod_set_value_cansleep(ctx->reset, 1);
-	usleep_range(1000, 2000);
 	gpiod_set_value_cansleep(ctx->reset, 0);
 	msleep(50);
 	gpiod_set_value_cansleep(ctx->reset, 1);
@@ -781,7 +776,7 @@ static int mtdsi_prepare(struct drm_panel *panel)
 
 poweroff:
 	regulator_disable(ctx->power);
-	usleep_range(5000, 7000);
+	usleep_range(1000, 2000);
 	gpiod_set_value_cansleep(ctx->reset, 0);
 
 	return ret;
@@ -795,12 +790,18 @@ static int mtdsi_exit_sleep_mode(struct mtdsi *ctx)
 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 
 	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-	if (ret < 0)
+	if (ret < 0) {
+		dev_err(&dsi->dev, "Failed to exit sleep mode: %d\n", ret);
 		return ret;
+	}
+
+	msleep(10);
 
 	ret = mipi_dsi_dcs_set_display_on(dsi);
-	if (ret < 0)
+	if (ret < 0) {
+		dev_err(&dsi->dev, "Failed to set display on: %d\n", ret);
 		return ret;
+	}
 
 	return 0;
 }
@@ -812,9 +813,12 @@ static int mtdsi_enable(struct drm_panel *panel)
 	int ret;
 
 	mtdsi_switch_page(dsi, 0x00);
+
+	msleep(5);
+
 	ret = mtdsi_exit_sleep_mode(ctx);
 	if (ret < 0) {
-		dev_err(panel->dev, "Failed to set panel off: %d\n", ret);
+		dev_err(panel->dev, "Failed to set panel on: %d\n", ret);
 		return ret;
 	}
 	msleep(130);
@@ -842,6 +846,13 @@ static int mtdsi_get_modes(struct drm_panel *panel,
 	connector->display_info.width_mm = ctx->desc->size.width_mm;
 	connector->display_info.height_mm = ctx->desc->size.height_mm;
 	connector->display_info.bpc = ctx->desc->bpc;
+
+	/*
+	 * TODO: Remove once all drm drivers call
+	 * drm_connector_set_orientation_from_panel()
+	 */
+
+	//drm_connector_set_panel_orientation(connector, ctx->orientation);
 
 	return 1;
 }

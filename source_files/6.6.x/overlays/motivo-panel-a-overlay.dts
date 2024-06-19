@@ -23,7 +23,9 @@
                 compatible = "motivo,mt1280800a";
                 reg=<0>;
                 label= "MOTIVO Panel type A Multitouch 8\" Display";
-                vc4_dsi = <&dsi1>;
+                panel_dsi_mt = <&dsi1>;
+                rotation = <270>;
+                rotate = <270>;
                 backlight = <&rpi_backlight>;
                 reset-gpios = <&gpio 20 0>;
                 port {
