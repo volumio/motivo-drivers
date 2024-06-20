@@ -319,19 +319,23 @@ static const struct panel_init_cmd mt1280800a_init_cmd[] = {
 	_INIT_DCS_CMD(0xD3, 0x39),
 
 	_INIT_SWITCH_PAGE_CMD(0x00),
-	//PWM
-	_INIT_DCS_CMD(0x51, 0x0F),
-	_INIT_DCS_CMD(0x52, 0xFF),
-	_INIT_DCS_CMD(0x53, 0x2C),
 
-	_INIT_DCS_CMD(0x35, 0x00),
-
+	_INIT_DCS_CMD(MIPI_DCS_SOFT_RESET),
+	_INIT_DELAY_CMD(5),
 	//_INIT_DCS_CMD(0x11, 0x00), // Use MIPI_DCS generic commands instead - breaks vc4 drm host transfer
 	_INIT_DCS_CMD(MIPI_DCS_EXIT_SLEEP_MODE),
 	_INIT_DELAY_CMD(120),
 	//_INIT_DCS_CMD(0x29, 0x00), // Use MIPI_DCS generic commands instead - breaks vc4 drm host transfer
 	_INIT_DCS_CMD(MIPI_DCS_SET_DISPLAY_ON),
 	_INIT_DELAY_CMD(20),
+
+	_INIT_DCS_CMD(0x35, 0x00),
+
+	//PWM
+	_INIT_DCS_CMD(0x51, 0x0F),
+	_INIT_DCS_CMD(0x52, 0xFF),
+	_INIT_DCS_CMD(0x53, 0x2C),
+
 	{},
 };
 
@@ -582,16 +586,20 @@ static const struct panel_init_cmd mt1280800b_init_cmd[] = {
 	_INIT_DCS_CMD(0xD3, 0x39),	//VN0
 
 	_INIT_SWITCH_PAGE_CMD(0x00),
-	//PWM
-	_INIT_DCS_CMD(0x51, 0x0F),
-	_INIT_DCS_CMD(0x52, 0xFF),
-	_INIT_DCS_CMD(0x53, 0x2C),
 
-	_INIT_DCS_CMD(0x35, 0x00),
+	_INIT_DCS_CMD(MIPI_DCS_SOFT_RESET),
+	_INIT_DELAY_CMD(5),
 	_INIT_DCS_CMD(MIPI_DCS_EXIT_SLEEP_MODE),
 	_INIT_DELAY_CMD(120),
 	_INIT_DCS_CMD(MIPI_DCS_SET_DISPLAY_ON),
 	_INIT_DELAY_CMD(20),
+
+	_INIT_DCS_CMD(0x35, 0x00),
+
+	//PWM
+	_INIT_DCS_CMD(0x51, 0x0F),
+	_INIT_DCS_CMD(0x52, 0xFF),
+	_INIT_DCS_CMD(0x53, 0x2C),
 	{},
 };
 
@@ -704,6 +712,10 @@ static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
 
 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 
+	// MIPI needs to return to the LP11 state before enabling all blocks inside the display
+	mipi_dsi_dcs_nop(ctx->dsi);
+	usleep_range(1000, 20000);
+
 	ret = mipi_dsi_dcs_set_display_off(dsi);
 	if (ret < 0) {
 		dev_err(&dsi->dev, "Failed to set display off: %d\n", ret);
@@ -789,13 +801,17 @@ static int mtdsi_exit_sleep_mode(struct mtdsi *ctx)
 
 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 
+	// MIPI needs to return to the LP11 state before enabling all blocks inside the display
+	mipi_dsi_dcs_nop(ctx->dsi);
+	usleep_range(1000, 20000);
+
 	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
 	if (ret < 0) {
 		dev_err(&dsi->dev, "Failed to exit sleep mode: %d\n", ret);
 		return ret;
 	}
 
-	msleep(10);
+	msleep(20);
 
 	ret = mipi_dsi_dcs_set_display_on(dsi);
 	if (ret < 0) {
@@ -852,7 +868,7 @@ static int mtdsi_get_modes(struct drm_panel *panel,
 	 * drm_connector_set_orientation_from_panel()
 	 */
 
-	//drm_connector_set_panel_orientation(connector, ctx->orientation);
+	drm_connector_set_panel_orientation(connector, DRM_MODE_PANEL_ORIENTATION_LEFT_UP);
 
 	return 1;
 }
