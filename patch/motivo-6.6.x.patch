@@ -1,5 +1,5 @@
 diff --git a/arch/arm/boot/dts/overlays/Makefile b/arch/arm/boot/dts/overlays/Makefile
-index 86e4991..1c8f9ed 100644
+index 86e499122..1c8f9edc7 100644
 --- a/arch/arm/boot/dts/overlays/Makefile
 +++ b/arch/arm/boot/dts/overlays/Makefile
 @@ -178,6 +178,11 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
@@ -16,7 +16,7 @@ index 86e4991..1c8f9ed 100644
  	ov5647.dtbo \
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-a-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-a-overlay.dts
 new file mode 100644
-index 0000000..f20eb0c
+index 000000000..f20eb0cc4
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-a-overlay.dts
 @@ -0,0 +1,128 @@
@@ -150,7 +150,7 @@ index 0000000..f20eb0c
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 new file mode 100644
-index 0000000..b41806d
+index 000000000..b41806d59
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
 @@ -0,0 +1,132 @@
@@ -288,7 +288,7 @@ index 0000000..b41806d
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-c-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-c-overlay.dts
 new file mode 100644
-index 0000000..293f577
+index 000000000..293f577cc
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-c-overlay.dts
 @@ -0,0 +1,121 @@
@@ -415,7 +415,7 @@ index 0000000..293f577
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-d-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-d-overlay.dts
 new file mode 100644
-index 0000000..922b3af
+index 000000000..922b3afa0
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-d-overlay.dts
 @@ -0,0 +1,121 @@
@@ -542,7 +542,7 @@ index 0000000..922b3af
 +};
 diff --git a/arch/arm/boot/dts/overlays/motivo-panel-e-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-e-overlay.dts
 new file mode 100644
-index 0000000..bcbcc41
+index 000000000..bcbcc417e
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/motivo-panel-e-overlay.dts
 @@ -0,0 +1,117 @@
@@ -664,7 +664,7 @@ index 0000000..bcbcc41
 +    };
 +};
 diff --git a/arch/arm/configs/bcm2711_defconfig b/arch/arm/configs/bcm2711_defconfig
-index 442e182..ee0370e 100644
+index 442e18282..ee0370e21 100644
 --- a/arch/arm/configs/bcm2711_defconfig
 +++ b/arch/arm/configs/bcm2711_defconfig
 @@ -978,6 +978,7 @@ CONFIG_DRM=m
@@ -676,7 +676,7 @@ index 442e182..ee0370e 100644
  CONFIG_DRM_PANEL_ILITEK_ILI9881C=m
  CONFIG_DRM_PANEL_JDI_LT070ME05000=m
 diff --git a/arch/arm64/configs/bcm2711_defconfig b/arch/arm64/configs/bcm2711_defconfig
-index 38ef9d2..668753e 100644
+index 38ef9d2d8..668753ed0 100644
 --- a/arch/arm64/configs/bcm2711_defconfig
 +++ b/arch/arm64/configs/bcm2711_defconfig
 @@ -1013,6 +1013,7 @@ CONFIG_DRM=m
@@ -687,30 +687,8 @@ index 38ef9d2..668753e 100644
  CONFIG_DRM_PANEL_ILITEK_ILI9806E=m
  CONFIG_DRM_PANEL_ILITEK_ILI9881C=m
  CONFIG_DRM_PANEL_JDI_LT070ME05000=m
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index aa93129..4580d7f 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -486,7 +486,7 @@ int drm_get_panel_orientation_quirk(int width, int height)
- 			return data->orientation;
- 	}
- 
--	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
-+	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
- }
- EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
- 
-@@ -495,7 +495,7 @@ EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
- /* There are no quirks for non x86 devices yet */
- int drm_get_panel_orientation_quirk(int width, int height)
- {
--	return DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
-+	return DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
- }
- EXPORT_SYMBOL(drm_get_panel_orientation_quirk);
- 
 diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index d3109ea..d7c4747 100644
+index d3109ea53..d7c474783 100644
 --- a/drivers/gpu/drm/panel/Kconfig
 +++ b/drivers/gpu/drm/panel/Kconfig
 @@ -867,4 +867,17 @@ config DRM_PANEL_XINPENG_XPP055C272
@@ -732,7 +710,7 @@ index d3109ea..d7c4747 100644
 +
  endmenu
 diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 9dd9b35..24dcbb7 100644
+index 9dd9b3503..24dcbb73c 100644
 --- a/drivers/gpu/drm/panel/Makefile
 +++ b/drivers/gpu/drm/panel/Makefile
 @@ -88,3 +88,4 @@ obj-$(CONFIG_DRM_PANEL_VISIONOX_R66451) += panel-visionox-r66451.o
@@ -742,10 +720,10 @@ index 9dd9b35..24dcbb7 100644
 +obj-$(CONFIG_DRM_PANEL_DSI_MT) += panel-dsi-mt.o
 diff --git a/drivers/gpu/drm/panel/panel-dsi-mt.c b/drivers/gpu/drm/panel/panel-dsi-mt.c
 new file mode 100644
-index 0000000..2f8ff5b
+index 000000000..e83bf46ee
 --- /dev/null
 +++ b/drivers/gpu/drm/panel/panel-dsi-mt.c
-@@ -0,0 +1,896 @@
+@@ -0,0 +1,971 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (C) 2024 VOLUMIO SRL. All rights reserved.
@@ -786,6 +764,12 @@ index 0000000..2f8ff5b
 +#include <drm/drm_panel.h>
 +
 +#include <video/mipi_display.h>
++
++#define RETRY_CMD	3		// Usually if it doesn't recover after the first or second failure, it won't recover at all.
++#define RETRY_DELAY	120		// Retry wait time for the drm vc4 host transfer.
++
++static atomic_t errorFlag = ATOMIC_INIT(0); // When broken atomic modeset userspace detected, reset from here.
++
 +
 +/*
 + * Use this descriptor struct to describe different panels using the
@@ -877,10 +861,8 @@ index 0000000..2f8ff5b
 +	//_INIT_DCS_CMD(0x2F, 0x01),
 +
 +	_INIT_SWITCH_PAGE_CMD(0x01),
-+	// Direction rotate selection holds drm_quirks in place
++	// Direction rotate selection holds sync in place
 +	_INIT_DCS_CMD(0x22, 0x30),
-+	//_INIT_DCS_CMD(0x22, 0x0B),
-+	//_INIT_DCS_CMD(0x22, 0x0A),
 +	// Direction rotate selection end
 +	_INIT_DCS_CMD(0x31, 0x00),
 +	_INIT_DCS_CMD(0x53, 0x7B),
@@ -991,11 +973,11 @@ index 0000000..2f8ff5b
 +
 +static const struct drm_display_mode mt1280800a1_default_mode = {
 +
-+#define HDA1		800		// Horizontal Display pixel length
++#define HDA1	800		// Horizontal Display pixel length
 +#define HFPA1	52		// 40 - 80		| Horizontal Front Porch
 +#define HSLA1	8		// 4 - 20		| Horizontal SYN Length
 +#define HBPA1	48		// 30 - 90		| Horizontal Back Porch
-+#define VDA1		1280	// Vertical Display pixel length
++#define VDA1	1280	// Vertical Display pixel length
 +#define VFPA1	30		//  4 - 40		| Vertical Front Porch
 +#define VSLA1	16		//  4 - 20		| Vertical SYN Length
 +#define VBPA1	18		//  4 - 40		| Vertical Back Porch
@@ -1302,14 +1284,14 @@ index 0000000..2f8ff5b
 +{
 +	struct mipi_dsi_device *dsi = ctx->dsi;
 +	struct drm_panel *panel = &ctx->base;
-+	int i, err = 0;
++	int i, err = 0, retry = 0;
 +
 +	if (ctx->desc->init_cmds) {
 +		const struct panel_init_cmd *init_cmds = ctx->desc->init_cmds;
 +
 +		for (i = 0; init_cmds[i].len != 0; i++) {
 +			const struct panel_init_cmd *cmd = &init_cmds[i];
-+
++		do {
 +			switch (cmd->type) {
 +			case DELAY_CMD:
 +				msleep(cmd->data[0]);
@@ -1326,6 +1308,11 @@ index 0000000..2f8ff5b
 +			default:
 +				err = -EINVAL;
 +			}
++
++			if (err) msleep(RETRY_DELAY);
++			++retry;
++			}
++			while (err && retry < RETRY_CMD);
 +
 +			if (err < 0) {
 +				dev_err(panel->dev,
@@ -1358,15 +1345,33 @@ index 0000000..2f8ff5b
 +static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
 +{
 +	struct mipi_dsi_device *dsi = ctx->dsi;
-+	int ret;
++	int retry,ret;
 +
 +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 +
 +	// MIPI needs to return to the LP11 state before enabling all blocks inside the display
-+	mipi_dsi_dcs_nop(ctx->dsi);
++
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_nop(ctx->dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(&dsi->dev, "Failed to return to the LP11 state prior sleep mode enter: %d\n", ret);
++		return ret;
++	}
++
 +	usleep_range(1000, 20000);
 +
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_set_display_off(dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
 +	if (ret < 0) {
 +		dev_err(&dsi->dev, "Failed to set display off: %d\n", ret);
 +		return ret;
@@ -1374,7 +1379,13 @@ index 0000000..2f8ff5b
 +
 +	msleep(5);
 +
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
 +	if (ret < 0) {
 +		dev_err(&dsi->dev, "Failed to enter sleep mode: %d\n", ret);
 +		return ret;
@@ -1391,8 +1402,11 @@ index 0000000..2f8ff5b
 +	ret = mtdsi_enter_sleep_mode(ctx);
 +	if (ret < 0) {
 +		dev_err(panel->dev, "Failed to set panel off: %d\n", ret);
++        atomic_set(&errorFlag, 1);
 +		return ret;
 +	}
++
++	atomic_set(&errorFlag, 0);
 +
 +	msleep(150);
 +
@@ -1413,14 +1427,26 @@ index 0000000..2f8ff5b
 +static int mtdsi_prepare(struct drm_panel *panel)
 +{
 +	struct mtdsi *ctx = to_mtdsi(panel);
-+	int ret;
++	int retry,ret;
++
++    atomic_set(&errorFlag, 0); // Clear the error flag
 +
 +	ret = regulator_enable(ctx->power);
 +
 +	usleep_range(1000, 2000);
 +
 +	// MIPI needs to keep the LP11 state before the lcm_reset pin is pulled high
-+	mipi_dsi_dcs_nop(ctx->dsi);
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_nop(ctx->dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(panel->dev, "Failed to return to the LP11 state prior prepare: %d\n", ret);
++		return ret;
++	}
 +	usleep_range(1000, 2000);
 +
 +	gpiod_set_value_cansleep(ctx->reset, 0);
@@ -1447,23 +1473,45 @@ index 0000000..2f8ff5b
 +static int mtdsi_exit_sleep_mode(struct mtdsi *ctx)
 +{
 +	struct mipi_dsi_device *dsi = ctx->dsi;
-+	int ret;
++	int retry,ret;
 +
 +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 +
 +	// MIPI needs to return to the LP11 state before enabling all blocks inside the display
-+	mipi_dsi_dcs_nop(ctx->dsi);
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_nop(ctx->dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(&dsi->dev, "Failed to return to the LP11 state prior sleep mode exit: %d\n", ret);
++		return ret;
++	}
 +	usleep_range(1000, 20000);
 +
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
 +	if (ret < 0) {
 +		dev_err(&dsi->dev, "Failed to exit sleep mode: %d\n", ret);
 +		return ret;
 +	}
 +
-+	msleep(20);
++	msleep(10);
 +
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_set_display_on(dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
 +	if (ret < 0) {
 +		dev_err(&dsi->dev, "Failed to set display on: %d\n", ret);
 +		return ret;
@@ -1485,9 +1533,14 @@ index 0000000..2f8ff5b
 +	ret = mtdsi_exit_sleep_mode(ctx);
 +	if (ret < 0) {
 +		dev_err(panel->dev, "Failed to set panel on: %d\n", ret);
++        atomic_set(&errorFlag, 1);
 +		return ret;
 +	}
-+	msleep(130);
++
++	atomic_set(&errorFlag, 0);
++
++	msleep(120);
++
 +	return 0;
 +}
 +
@@ -1643,7 +1696,7 @@ index 0000000..2f8ff5b
 +MODULE_DESCRIPTION("DRM Driver for MOTIVO MIPI DSI panels.");
 +MODULE_LICENSE("GPL v2");
 diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
-index 971f8ee..767aff1 100644
+index 971f8ee56..767aff183 100644
 --- a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
 +++ b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
 @@ -4,6 +4,7 @@
@@ -2431,7 +2484,7 @@ index 971f8ee..767aff1 100644
  };
  MODULE_DEVICE_TABLE(of, ili9881c_of_match);
 diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 48e0226..9e0a8aa 100644
+index 48e0226b2..9e0a8aac4 100644
 --- a/sound/usb/quirks.c
 +++ b/sound/usb/quirks.c
 @@ -1877,7 +1877,16 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,

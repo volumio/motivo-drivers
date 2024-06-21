@@ -39,6 +39,12 @@
 
 #include <video/mipi_display.h>
 
+#define RETRY_CMD	3		// Usually if it doesn't recover after the first or second failure, it won't recover at all.
+#define RETRY_DELAY	120		// Retry wait time for the drm vc4 host transfer.
+
+static atomic_t errorFlag = ATOMIC_INIT(0); // When broken atomic modeset userspace detected, reset from here.
+
+
 /*
  * Use this descriptor struct to describe different panels using the
  * Motivo ILITEC based display controller template.
@@ -129,10 +135,8 @@ static const struct panel_init_cmd mt1280800a_init_cmd[] = {
 	//_INIT_DCS_CMD(0x2F, 0x01),
 
 	_INIT_SWITCH_PAGE_CMD(0x01),
-	// Direction rotate selection holds drm_quirks in place
+	// Direction rotate selection holds sync in place
 	_INIT_DCS_CMD(0x22, 0x30),
-	//_INIT_DCS_CMD(0x22, 0x0B),
-	//_INIT_DCS_CMD(0x22, 0x0A),
 	// Direction rotate selection end
 	_INIT_DCS_CMD(0x31, 0x00),
 	_INIT_DCS_CMD(0x53, 0x7B),
@@ -243,11 +247,11 @@ static const struct panel_desc mt1280800a_desc = {
 
 static const struct drm_display_mode mt1280800a1_default_mode = {
 
-#define HDA1		800		// Horizontal Display pixel length
+#define HDA1	800		// Horizontal Display pixel length
 #define HFPA1	52		// 40 - 80		| Horizontal Front Porch
 #define HSLA1	8		// 4 - 20		| Horizontal SYN Length
 #define HBPA1	48		// 30 - 90		| Horizontal Back Porch
-#define VDA1		1280	// Vertical Display pixel length
+#define VDA1	1280	// Vertical Display pixel length
 #define VFPA1	30		//  4 - 40		| Vertical Front Porch
 #define VSLA1	16		//  4 - 20		| Vertical SYN Length
 #define VBPA1	18		//  4 - 40		| Vertical Back Porch
@@ -554,14 +558,14 @@ static int mtdsi_init_dcs_cmd(struct mtdsi *ctx)
 {
 	struct mipi_dsi_device *dsi = ctx->dsi;
 	struct drm_panel *panel = &ctx->base;
-	int i, err = 0;
+	int i, err = 0, retry = 0;
 
 	if (ctx->desc->init_cmds) {
 		const struct panel_init_cmd *init_cmds = ctx->desc->init_cmds;
 
 		for (i = 0; init_cmds[i].len != 0; i++) {
 			const struct panel_init_cmd *cmd = &init_cmds[i];
-
+		do {
 			switch (cmd->type) {
 			case DELAY_CMD:
 				msleep(cmd->data[0]);
@@ -578,6 +582,11 @@ static int mtdsi_init_dcs_cmd(struct mtdsi *ctx)
 			default:
 				err = -EINVAL;
 			}
+
+			if (err) msleep(RETRY_DELAY);
+			++retry;
+			}
+			while (err && retry < RETRY_CMD);
 
 			if (err < 0) {
 				dev_err(panel->dev,
@@ -610,15 +619,33 @@ static int mtdsi_switch_page(struct mipi_dsi_device *dsi, u8 page)
 static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
 {
 	struct mipi_dsi_device *dsi = ctx->dsi;
-	int ret;
+	int retry,ret;
 
 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 
 	// MIPI needs to return to the LP11 state before enabling all blocks inside the display
-	mipi_dsi_dcs_nop(ctx->dsi);
+
+    retry = 0;
+    do {
+		ret = mipi_dsi_dcs_nop(ctx->dsi);
+		if (ret) msleep(RETRY_DELAY);
+		++retry;
+    }
+    while (ret && retry < RETRY_CMD);
+	if (ret < 0) {
+		dev_err(&dsi->dev, "Failed to return to the LP11 state prior sleep mode enter: %d\n", ret);
+		return ret;
+	}
+
 	usleep_range(1000, 20000);
 
-	ret = mipi_dsi_dcs_set_display_off(dsi);
+    retry = 0;
+    do {
+		ret = mipi_dsi_dcs_set_display_off(dsi);
+		if (ret) msleep(RETRY_DELAY);
+		++retry;
+    }
+    while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
 		dev_err(&dsi->dev, "Failed to set display off: %d\n", ret);
 		return ret;
@@ -626,7 +653,13 @@ static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
 
 	msleep(5);
 
-	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+    retry = 0;
+    do {
+		ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+		if (ret) msleep(RETRY_DELAY);
+		++retry;
+    }
+    while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
 		dev_err(&dsi->dev, "Failed to enter sleep mode: %d\n", ret);
 		return ret;
@@ -643,8 +676,11 @@ static int mtdsi_disable(struct drm_panel *panel)
 	ret = mtdsi_enter_sleep_mode(ctx);
 	if (ret < 0) {
 		dev_err(panel->dev, "Failed to set panel off: %d\n", ret);
+        atomic_set(&errorFlag, 1);
 		return ret;
 	}
+
+	atomic_set(&errorFlag, 0);
 
 	msleep(150);
 
@@ -665,14 +701,26 @@ static int mtdsi_unprepare(struct drm_panel *panel)
 static int mtdsi_prepare(struct drm_panel *panel)
 {
 	struct mtdsi *ctx = to_mtdsi(panel);
-	int ret;
+	int retry,ret;
+
+    atomic_set(&errorFlag, 0); // Clear the error flag
 
 	ret = regulator_enable(ctx->power);
 
 	usleep_range(1000, 2000);
 
 	// MIPI needs to keep the LP11 state before the lcm_reset pin is pulled high
-	mipi_dsi_dcs_nop(ctx->dsi);
+    retry = 0;
+    do {
+		ret = mipi_dsi_dcs_nop(ctx->dsi);
+		if (ret) msleep(RETRY_DELAY);
+		++retry;
+    }
+    while (ret && retry < RETRY_CMD);
+	if (ret < 0) {
+		dev_err(panel->dev, "Failed to return to the LP11 state prior prepare: %d\n", ret);
+		return ret;
+	}
 	usleep_range(1000, 2000);
 
 	gpiod_set_value_cansleep(ctx->reset, 0);
@@ -699,23 +747,45 @@ poweroff:
 static int mtdsi_exit_sleep_mode(struct mtdsi *ctx)
 {
 	struct mipi_dsi_device *dsi = ctx->dsi;
-	int ret;
+	int retry,ret;
 
 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 
 	// MIPI needs to return to the LP11 state before enabling all blocks inside the display
-	mipi_dsi_dcs_nop(ctx->dsi);
+    retry = 0;
+    do {
+		ret = mipi_dsi_dcs_nop(ctx->dsi);
+		if (ret) msleep(RETRY_DELAY);
+		++retry;
+    }
+    while (ret && retry < RETRY_CMD);
+	if (ret < 0) {
+		dev_err(&dsi->dev, "Failed to return to the LP11 state prior sleep mode exit: %d\n", ret);
+		return ret;
+	}
 	usleep_range(1000, 20000);
 
-	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+    retry = 0;
+    do {
+		ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+		if (ret) msleep(RETRY_DELAY);
+		++retry;
+    }
+    while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
 		dev_err(&dsi->dev, "Failed to exit sleep mode: %d\n", ret);
 		return ret;
 	}
 
-	msleep(20);
+	msleep(10);
 
-	ret = mipi_dsi_dcs_set_display_on(dsi);
+    retry = 0;
+    do {
+		ret = mipi_dsi_dcs_set_display_on(dsi);
+		if (ret) msleep(RETRY_DELAY);
+		++retry;
+    }
+    while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
 		dev_err(&dsi->dev, "Failed to set display on: %d\n", ret);
 		return ret;
@@ -737,9 +807,14 @@ static int mtdsi_enable(struct drm_panel *panel)
 	ret = mtdsi_exit_sleep_mode(ctx);
 	if (ret < 0) {
 		dev_err(panel->dev, "Failed to set panel on: %d\n", ret);
+        atomic_set(&errorFlag, 1);
 		return ret;
 	}
-	msleep(130);
+
+	atomic_set(&errorFlag, 0);
+
+	msleep(120);
+
 	return 0;
 }
 
