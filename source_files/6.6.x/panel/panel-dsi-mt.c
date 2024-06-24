@@ -119,11 +119,11 @@ static const struct panel_init_cmd mt1280800a_init_cmd[] = {
 */
 
 	_INIT_SWITCH_PAGE_CMD(0x04),
-	_INIT_DCS_CMD(0x6E, 0x6A),
+	_INIT_DCS_CMD(0x6E, 0x2B),
 	//clamp 15V
-	_INIT_DCS_CMD(0x6F, 0x34),
+	_INIT_DCS_CMD(0x6F, 0x33),
 	_INIT_DCS_CMD(0x3A, 0xA4),
-	_INIT_DCS_CMD(0x8D, 0x1F),
+	_INIT_DCS_CMD(0x8D, 0x18),
 	_INIT_DCS_CMD(0x87, 0xBA),
 	_INIT_DCS_CMD(0x26, 0x76),
 	_INIT_DCS_CMD(0xB2, 0xD1),
@@ -198,9 +198,7 @@ static const struct panel_init_cmd mt1280800a_init_cmd[] = {
 	_INIT_DELAY_CMD(20),
 
 	//PWM controlled by overlay
-	_INIT_DCS_CMD(0x51, 0x00),
-	_INIT_DCS_CMD(0x52, 0x00),
-	_INIT_DCS_CMD(0x53, 0x00),
+	_INIT_DCS_CMD(0x55, 0x03), // Medium Setting of CABC/DBLC
 
 	{},
 };
@@ -233,46 +231,6 @@ static const struct drm_display_mode mt1280800a_default_mode = {
 
 static const struct panel_desc mt1280800a_desc = {
 	.modes = &mt1280800a_default_mode,
-	.bpc = 8,
-	.size = {
-		.width_mm = 107,
-		.height_mm = 172,
-	},
-	.lanes = 4,
-	.format = MIPI_DSI_FMT_RGB888,
-	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-		      MIPI_DSI_MODE_LPM,
-	.init_cmds = mt1280800a_init_cmd,
-};
-
-static const struct drm_display_mode mt1280800a1_default_mode = {
-
-#define HDA1	800		// Horizontal Display pixel length
-#define HFPA1	52		// 40 - 80		| Horizontal Front Porch
-#define HSLA1	8		// 4 - 20		| Horizontal SYN Length
-#define HBPA1	48		// 30 - 90		| Horizontal Back Porch
-#define VDA1	1280	// Vertical Display pixel length
-#define VFPA1	30		//  4 - 40		| Vertical Front Porch
-#define VSLA1	16		//  4 - 20		| Vertical SYN Length
-#define VBPA1	18		//  4 - 40		| Vertical Back Porch
-
-	.hdisplay		= HDA1,
-	.hsync_start	= HDA1 + HFPA1,
-	.hsync_end		= HDA1 + HFPA1 + HSLA1,
-	.htotal			= HDA1 + HFPA1 + HSLA1 + HBPA1,
-
-	.vdisplay		= VDA1,
-	.vsync_start	= VDA1 + VFPA1,
-	.vsync_end		= VDA1 + VFPA1 + VSLA1,
-	.vtotal			= VDA1 + VFPA1 + VSLA1 + VBPA1,
-
-	.clock			= (HDA1 + HFPA1 + HSLA1 + HBPA1) * (VDA1 + VFPA1 + VSLA1 + VBPA1) * 60 / 1000,
-
-	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-};
-
-static const struct panel_desc mt1280800a1_desc = {
-	.modes = &mt1280800a1_default_mode,
 	.bpc = 8,
 	.size = {
 		.width_mm = 107,
@@ -502,9 +460,7 @@ static const struct panel_init_cmd mt1280800b_init_cmd[] = {
 	_INIT_DELAY_CMD(20),
 
 	//PWM controlled by overlay
-	_INIT_DCS_CMD(0x51, 0x00),
-	_INIT_DCS_CMD(0x52, 0x00),
-	_INIT_DCS_CMD(0x53, 0x00),
+	_INIT_DCS_CMD(0x55, 0x03), // Medium Setting of CABC/DBLC
 
 	{},
 };
@@ -950,7 +906,6 @@ static void mtdsi_remove(struct mipi_dsi_device *dsi)
 
 static const struct of_device_id mtdsi_of_match[] = {
 	{ .compatible = "motivo,mt1280800a", .data = &mt1280800a_desc },
-	{ .compatible = "motivo,mt1280800a1", .data = &mt1280800a1_desc },
 	{ .compatible = "motivo,mt1280800b", .data = &mt1280800b_desc },
 	{ /* sentinel */ }
 };
