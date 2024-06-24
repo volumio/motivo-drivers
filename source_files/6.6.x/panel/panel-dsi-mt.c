@@ -546,7 +546,7 @@ static int mtdsi_init_dcs_cmd(struct mtdsi *ctx)
 
 			if (err < 0) {
 				dev_err(panel->dev,
-					"Failed to write command %u\n", i);
+					"DSI: Failed to write init commands %u\n", i);
 				return err;
 			}
 		}
@@ -556,16 +556,22 @@ static int mtdsi_init_dcs_cmd(struct mtdsi *ctx)
 
 static int mtdsi_switch_page(struct mipi_dsi_device *dsi, u8 page)
 {
-	int ret;
+	int retry,ret;
 	const struct panel_init_cmd cmd = _INIT_SWITCH_PAGE_CMD(page);
 
+    retry = 0;
+    do {
 	ret = mipi_dsi_dcs_write(dsi, cmd.data[0],
 				 cmd.len <= 1 ? NULL :
 				 &cmd.data[1],
 				 cmd.len - 1);
+		if (ret) msleep(RETRY_DELAY);
+		++retry;
+    }
+    while (ret && retry < RETRY_CMD);
 	if (ret) {
 		dev_err(&dsi->dev,
-			"Error switching panel controller page (%d)\n", ret);
+			"DSI: Error switching panel controller page (%d)\n", ret);
 		return ret;
 	}
 
@@ -589,8 +595,8 @@ static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
     }
     while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
-		dev_err(&dsi->dev, "Failed to return to the LP11 state prior sleep mode enter: %d\n", ret);
-		return ret;
+		dev_err(&dsi->dev, "DSI: Failed to return to the LP11 state prior sleep mode enter: %d\n", ret);
+//		return 0; //Do not error here yet. This is DSI transfer warmup.
 	}
 
 	usleep_range(1000, 20000);
@@ -603,7 +609,7 @@ static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
     }
     while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
-		dev_err(&dsi->dev, "Failed to set display off: %d\n", ret);
+		dev_err(&dsi->dev, "DSI: Failed to set display off: %d\n", ret);
 		return ret;
 	}
 
@@ -617,7 +623,7 @@ static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
     }
     while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
-		dev_err(&dsi->dev, "Failed to enter sleep mode: %d\n", ret);
+		dev_err(&dsi->dev, "DSI: Failed to enter sleep mode: %d\n", ret);
 		return ret;
 	}
 
@@ -631,7 +637,7 @@ static int mtdsi_disable(struct drm_panel *panel)
 
 	ret = mtdsi_enter_sleep_mode(ctx);
 	if (ret < 0) {
-		dev_err(panel->dev, "Failed to set panel off: %d\n", ret);
+		dev_err(panel->dev, "DSI: Failed to set panel off: %d\n", ret);
         atomic_set(&errorFlag, 1);
 		return ret;
 	}
@@ -674,8 +680,8 @@ static int mtdsi_prepare(struct drm_panel *panel)
     }
     while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
-		dev_err(panel->dev, "Failed to return to the LP11 state prior prepare: %d\n", ret);
-		return ret;
+		dev_err(panel->dev, "DSI: Failed to return to the LP11 state prior prepare: %d\n", ret);
+//		return 0; //Do not error here yet. This is DSI transfer warmup.
 	}
 	usleep_range(1000, 2000);
 
@@ -686,7 +692,7 @@ static int mtdsi_prepare(struct drm_panel *panel)
 
 	ret = mtdsi_init_dcs_cmd(ctx);
 	if (ret < 0) {
-		dev_err(panel->dev, "Failed to init panel: %d\n", ret);
+		dev_err(panel->dev, "DSI: Failed to initialize panel: %d\n", ret);
 		goto poweroff;
 	}
 
@@ -716,8 +722,8 @@ static int mtdsi_exit_sleep_mode(struct mtdsi *ctx)
     }
     while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
-		dev_err(&dsi->dev, "Failed to return to the LP11 state prior sleep mode exit: %d\n", ret);
-		return ret;
+		dev_err(&dsi->dev, "DSI: Failed to return to the LP11 state prior sleep mode exit: %d\n", ret);
+//		return 0; //Do not error here yet. This is DSI transfer warmup.
 	}
 	usleep_range(1000, 20000);
 
@@ -729,7 +735,7 @@ static int mtdsi_exit_sleep_mode(struct mtdsi *ctx)
     }
     while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
-		dev_err(&dsi->dev, "Failed to exit sleep mode: %d\n", ret);
+		dev_err(&dsi->dev, "DSI: Failed to exit sleep mode: %d\n", ret);
 		return ret;
 	}
 
@@ -743,7 +749,7 @@ static int mtdsi_exit_sleep_mode(struct mtdsi *ctx)
     }
     while (ret && retry < RETRY_CMD);
 	if (ret < 0) {
-		dev_err(&dsi->dev, "Failed to set display on: %d\n", ret);
+		dev_err(&dsi->dev, "DSI: Failed to set display on: %d\n", ret);
 		return ret;
 	}
 
@@ -762,7 +768,7 @@ static int mtdsi_enable(struct drm_panel *panel)
 
 	ret = mtdsi_exit_sleep_mode(ctx);
 	if (ret < 0) {
-		dev_err(panel->dev, "Failed to set panel on: %d\n", ret);
+		dev_err(panel->dev, "DSI: Failed to activate panel: %d\n", ret);
         atomic_set(&errorFlag, 1);
 		return ret;
 	}
@@ -783,7 +789,7 @@ static int mtdsi_get_modes(struct drm_panel *panel,
 
 	mode = drm_mode_duplicate(connector->dev, m);
 	if (!mode) {
-		dev_err(panel->dev, "Failed to add mode %ux%u@%u\n",
+		dev_err(panel->dev, "DSI: Failed to add mode %ux%u@%u\n",
 			m->hdisplay, m->vdisplay, drm_mode_vrefresh(m));
 		return -ENOMEM;
 	}
@@ -833,7 +839,7 @@ static int mtdsi_add(struct mtdsi *ctx)
 
 	ctx->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
 	if (IS_ERR(ctx->reset)) {
-		dev_err(dev, "Cannot get reset-gpios %ld\n",
+		dev_err(dev, "DSI: Cannot get reset-gpios %ld\n",
 			PTR_ERR(ctx->reset));
 		return PTR_ERR(ctx->reset);
 	}
@@ -844,7 +850,7 @@ static int mtdsi_add(struct mtdsi *ctx)
 		       DRM_MODE_CONNECTOR_DSI);
 	err = of_drm_get_panel_orientation(dev->of_node, &ctx->orientation);
 	if (err < 0) {
-		dev_err(dev, "%pOF: Failed to get orientation %d\n", dev->of_node, err);
+		dev_err(dev, "DSI: %pOF: Failed to get orientation %d\n", dev->of_node, err);
 		return err;
 	}
 
@@ -898,7 +904,7 @@ static void mtdsi_remove(struct mipi_dsi_device *dsi)
 
 	ret = mipi_dsi_detach(dsi);
 	if (ret < 0)
-		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
+		dev_err(&dsi->dev, "DSI: Failed to detach from DSI host: %d\n", ret);
 
 	if (ctx->base.dev)
 		drm_panel_remove(&ctx->base);
