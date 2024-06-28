@@ -720,7 +720,7 @@ index 9dd9b3503..24dcbb73c 100644
 +obj-$(CONFIG_DRM_PANEL_DSI_MT) += panel-dsi-mt.o
 diff --git a/drivers/gpu/drm/panel/panel-dsi-mt.c b/drivers/gpu/drm/panel/panel-dsi-mt.c
 new file mode 100644
-index 000000000..67f850b8f
+index 000000000..6933ec342
 --- /dev/null
 +++ b/drivers/gpu/drm/panel/panel-dsi-mt.c
 @@ -0,0 +1,932 @@
@@ -1178,7 +1178,7 @@ index 000000000..67f850b8f
 +	_INIT_SWITCH_PAGE_CMD(0x00),
 +
 +	_INIT_DCS_CMD(MIPI_DCS_SOFT_RESET),
-+	_INIT_DELAY_CMD(5),
++	_INIT_DELAY_CMD(10),
 +	_INIT_DCS_CMD(0x35, 0x00),  // Tearing Effect Line On
 +	_INIT_DCS_CMD(MIPI_DCS_EXIT_SLEEP_MODE), // Use MIPI_DCS generic commands instead of (0x11, 0x00) - breaks vc4 drm host transfer 
 +	_INIT_DELAY_CMD(120),
@@ -1186,7 +1186,7 @@ index 000000000..67f850b8f
 +	_INIT_DELAY_CMD(20),
 +
 +	//PWM controlled by overlay
-+	_INIT_DCS_CMD(0x55, 0x03), // Medium Setting of CABC/DBLC
++	_INIT_DCS_CMD(0x55, 0x01), // Conservative Setting of CABC/DBLC
 +
 +	{},
 +};

@@ -452,7 +452,7 @@ static const struct panel_init_cmd mt1280800b_init_cmd[] = {
 	_INIT_SWITCH_PAGE_CMD(0x00),
 
 	_INIT_DCS_CMD(MIPI_DCS_SOFT_RESET),
-	_INIT_DELAY_CMD(5),
+	_INIT_DELAY_CMD(10),
 	_INIT_DCS_CMD(0x35, 0x00),  // Tearing Effect Line On
 	_INIT_DCS_CMD(MIPI_DCS_EXIT_SLEEP_MODE), // Use MIPI_DCS generic commands instead of (0x11, 0x00) - breaks vc4 drm host transfer 
 	_INIT_DELAY_CMD(120),
@@ -460,7 +460,7 @@ static const struct panel_init_cmd mt1280800b_init_cmd[] = {
 	_INIT_DELAY_CMD(20),
 
 	//PWM controlled by overlay
-	_INIT_DCS_CMD(0x55, 0x03), // Medium Setting of CABC/DBLC
+	_INIT_DCS_CMD(0x55, 0x01), // Conservative Setting of CABC/DBLC
 
 	{},
 };
