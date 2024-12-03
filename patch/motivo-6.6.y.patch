@@ -1,0 +1,2627 @@
+diff --git a/arch/arm/boot/dts/overlays/Makefile b/arch/arm/boot/dts/overlays/Makefile
+index 560a63c..4c2b94d 100644
+--- a/arch/arm/boot/dts/overlays/Makefile
++++ b/arch/arm/boot/dts/overlays/Makefile
+@@ -184,6 +184,11 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
+ 	mipi-dbi-spi.dtbo \
+ 	mlx90640.dtbo \
+ 	mmc.dtbo \
++	motivo-panel-a.dtbo \
++	motivo-panel-b.dtbo \
++	motivo-panel-c.dtbo \
++	motivo-panel-d.dtbo \
++	motivo-panel-e.dtbo \
+ 	mz61581.dtbo \
+ 	ov2311.dtbo \
+ 	ov5647.dtbo \
+diff --git a/arch/arm/boot/dts/overlays/motivo-panel-a-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-a-overlay.dts
+new file mode 100644
+index 000000000..f20eb0cc4
+--- /dev/null
++++ b/arch/arm/boot/dts/overlays/motivo-panel-a-overlay.dts
+@@ -0,0 +1,128 @@
++/dts-v1/;
++/plugin/;
++
++/ {
++    compatible = "brcm,bcm2835";
++
++    fragment@0 {
++        target=<&dsi1>;
++
++        __overlay__ {
++            status = "okay";
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port {
++                dsi1_out_port: endpoint {
++                    remote-endpoint = <&panel_dsi_in1>;
++                };
++            };
++
++            display1: panel@0 {
++                compatible = "motivo,mt1280800a";
++                reg=<0>;
++                label= "MOTIVO Panel type A Multitouch 8\" Display";
++                panel_dsi_mt = <&dsi1>;
++                rotation = <270>;
++                rotate = <270>;
++                backlight = <&rpi_backlight>;
++                reset-gpios = <&gpio 20 0>;
++                port {
++                    panel_dsi_in1: endpoint {
++                        remote-endpoint = <&dsi1_out_port>;
++                    };
++                };
++            };
++        };
++    };
++
++    fragment@1 {
++        target = <&gpio>;
++        __overlay__ {
++            pwm_pins: pwm_pins {
++                brcm,pins = <12>;
++                brcm,function = <4>; // ALT0
++            };
++        };
++    };
++
++    fragment@2 {
++        target = <&pwm>;
++        frag1: __overlay__ {
++            pinctrl-names = "default";
++            pinctrl-0 = <&pwm_pins>;
++            assigned-clock-rates = <1000000>;
++            status = "okay";
++        };
++    };
++
++    fragment@3 {
++        target-path = "/";
++        __overlay__ {
++            rpi_backlight: rpi_backlight {
++                compatible = "pwm-backlight";
++                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
++                default-brightness-level = <6>;
++                pwms = <&pwm 0 200000 0>;
++                power-supply = <&vdd_3v3_reg>;
++                status = "okay";
++            };
++        };
++    };
++
++    fragment@4 {
++        target = <&i2c6>;
++        frag0: __overlay__ {
++            status = "okay";
++            pinctrl-names = "default";
++            pinctrl-0 = <&i2c6_pins>;
++            clock-frequency = <400000>;
++        };
++    };
++
++    fragment@5 {
++        target = <&i2c6_pins>;
++        __dormant__ {
++            brcm,pins = <0 1>;
++        };
++    };
++
++    fragment@6 {
++        target = <&i2c6_pins>;
++        __overlay__ {
++            brcm,pins = <22 23>;
++        };
++    };
++
++    fragment@7 {
++            target = <&gpio>;
++            __overlay__ {
++                goodix_pins: goodix_pins {
++                    brcm,pins = <27 26>; // interrupt and reset
++                    brcm,function = <0 0>; // in
++                    brcm,pull = <2 2>; // pull-up
++                };
++            };
++    };
++
++    fragment@8 {
++        target = <&i2c6>;
++        __overlay__ {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            status = "okay";
++
++            gt9xx: gt9xx@5d {
++                compatible = "goodix,gt9271";
++                reg = <0x5D>;
++                pinctrl-names = "default";
++                pinctrl-0 = <&goodix_pins>;
++                interrupt-parent = <&gpio>;
++                interrupts = <27 2>; // high-to-low edge triggered
++                irq-gpios = <&gpio 27 0>;
++                reset-gpios = <&gpio 26 0>;
++            };
++        };
++    };
++};
+diff --git a/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
+new file mode 100644
+index 000000000..b41806d59
+--- /dev/null
++++ b/arch/arm/boot/dts/overlays/motivo-panel-b-overlay.dts
+@@ -0,0 +1,132 @@
++/dts-v1/;
++/plugin/;
++
++/ {
++    compatible = "brcm,bcm2835";
++
++    fragment@0 {
++        target=<&dsi1>;
++
++        __overlay__ {
++            status = "okay";
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port {
++                dsi1_out_port: endpoint {
++                    remote-endpoint = <&panel_dsi_in1>;
++                };
++            };
++
++            display1: panel@0 {
++                compatible = "motivo,mt1280800b";
++                reg=<0>;
++                label= "MOTIVO Panel type B Multitouch 8\" Display";
++                panel_dsi_mt = <&dsi1>;
++                rotation = <270>;
++                rotate = <270>;
++                backlight = <&rpi_backlight>;
++                reset-gpios = <&gpio 20 0>;
++                port {
++                    panel_dsi_in1: endpoint {
++                        remote-endpoint = <&dsi1_out_port>;
++                    };
++                };
++            };
++        };
++    };
++
++    fragment@1 {
++        target = <&gpio>;
++        __overlay__ {
++            pwm_pins: pwm_pins {
++                brcm,pins = <12>;
++                brcm,function = <4>; // ALT0
++            };
++        };
++    };
++
++    fragment@2 {
++        target = <&pwm>;
++        frag1: __overlay__ {
++            pinctrl-names = "default";
++            pinctrl-0 = <&pwm_pins>;
++            assigned-clock-rates = <1000000>;
++            status = "okay";
++        };
++    };
++
++    fragment@3 {
++        target-path = "/";
++        __overlay__ {
++            rpi_backlight: rpi_backlight {
++                compatible = "pwm-backlight";
++                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
++                default-brightness-level = <6>;
++                pwms = <&pwm 0 200000 0>;
++                power-supply = <&vdd_3v3_reg>;
++                status = "okay";
++            };
++        };
++    };
++
++    fragment@4 {
++        target = <&i2c6>;
++        frag0: __overlay__ {
++            status = "okay";
++            pinctrl-names = "default";
++            pinctrl-0 = <&i2c6_pins>;
++            clock-frequency = <400000>;
++        };
++    };
++
++    fragment@5 {
++        target = <&i2c6_pins>;
++        __dormant__ {
++            brcm,pins = <0 1>;
++        };
++    };
++
++    fragment@6 {
++        target = <&i2c6_pins>;
++        __overlay__ {
++            brcm,pins = <22 23>;
++        };
++    };
++
++    fragment@7 {
++            target = <&gpio>;
++            __overlay__ {
++                goodix_pins: goodix_pins {
++                    brcm,pins = <27 26>; // interrupt and reset
++                    brcm,function = <0 0>; // in
++                    brcm,pull = <2 2>; // pull-up
++                };
++            };
++    };
++
++    fragment@8 {
++        target = <&i2c6>;
++        __overlay__ {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            status = "okay";
++
++            gt9xx: gt9xx@5d {
++                compatible = "goodix,gt911";
++                reg = <0x5D>;
++                pinctrl-names = "default";
++                pinctrl-0 = <&goodix_pins>;
++                interrupt-parent = <&gpio>;
++                interrupts = <27 2>; // high-to-low edge triggered
++                irq-gpios = <&gpio 27 0>;
++                reset-gpios = <&gpio 26 0>;
++                touchscreen-size-x = <800>;
++                touchscreen-size-y = <1280>;
++                touchscreen-inverted-x;
++                touchscreen-swapped-x-y;
++            };
++        };
++    };
++};
+diff --git a/arch/arm/boot/dts/overlays/motivo-panel-c-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-c-overlay.dts
+new file mode 100644
+index 000000000..293f577cc
+--- /dev/null
++++ b/arch/arm/boot/dts/overlays/motivo-panel-c-overlay.dts
+@@ -0,0 +1,121 @@
++/dts-v1/;
++/plugin/;
++
++/ {
++    compatible = "brcm,bcm2835";
++
++    fragment@0 {
++        target=<&dsi1>;
++
++        __overlay__ {
++            status = "okay";
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port {
++                dsi1_out_port: endpoint {
++                    remote-endpoint = <&panel_dsi_in1>;
++                };
++            };
++
++            display1: panel@0 {
++                compatible = "zhunyi,z80033-ph31";
++                reg=<0>;
++                backlight = <&rpi_backlight>;
++                reset-gpios = <&gpio 20 0>;
++                port {
++                    panel_dsi_in1: endpoint {
++                        remote-endpoint = <&dsi1_out_port>;
++                    };
++                };
++            };
++        };
++    };
++
++    fragment@1 {
++        target = <&gpio>;
++        __overlay__ {
++            pwm_pins: pwm_pins {
++                brcm,pins = <12>;
++                brcm,function = <4>; // ALT0
++            };
++        };
++    };
++
++    fragment@2 {
++        target = <&pwm>;
++        frag1: __overlay__ {
++            pinctrl-names = "default";
++            pinctrl-0 = <&pwm_pins>;
++            assigned-clock-rates = <1000000>;
++            status = "okay";
++        };
++    };
++
++    fragment@3 {
++        target-path = "/";
++        __overlay__ {
++            rpi_backlight: rpi_backlight {
++                compatible = "pwm-backlight";
++                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
++                default-brightness-level = <6>;
++                pwms = <&pwm 0 200000 0>;
++                power-supply = <&vdd_3v3_reg>;
++                status = "okay";
++            };
++        };
++    };
++
++    fragment@4 {
++        target = <&i2c6>;
++        frag0: __overlay__ {
++            status = "okay";
++            pinctrl-names = "default";
++            pinctrl-0 = <&i2c6_pins>;
++            clock-frequency = <400000>;
++        };
++    };
++
++    fragment@5 {
++        target = <&i2c6_pins>;
++        __overlay__ {
++            brcm,pins = <22 23>;
++        };
++    };
++
++    fragment@6 {
++            target = <&gpio>;
++            __overlay__ {
++                goodix_pins: goodix_pins {
++                    brcm,pins = <27 26>; // interrupt and reset
++                    brcm,function = <0 0>; // in
++                    brcm,pull = <2 2>; // pull-up
++                };
++            };
++    };
++
++    fragment@7 {
++        target = <&i2c6>;
++        __overlay__ {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            status = "okay";
++
++            gt9xx: gt9xx@5d {
++                compatible = "goodix,gt911";
++                reg = <0x5D>;
++                pinctrl-names = "default";
++                pinctrl-0 = <&goodix_pins>;
++                interrupt-parent = <&gpio>;
++                interrupts = <27 2>; // high-to-low edge triggered
++                irq-gpios = <&gpio 27 0>;
++                reset-gpios = <&gpio 26 0>;
++                touchscreen-size-x = <800>;
++                touchscreen-size-y = <1280>;
++                touchscreen-inverted-y;
++                touchscreen-swapped-x-y;
++            };
++        };
++    };
++};
+diff --git a/arch/arm/boot/dts/overlays/motivo-panel-d-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-d-overlay.dts
+new file mode 100644
+index 000000000..922b3afa0
+--- /dev/null
++++ b/arch/arm/boot/dts/overlays/motivo-panel-d-overlay.dts
+@@ -0,0 +1,121 @@
++/dts-v1/;
++/plugin/;
++
++/ {
++    compatible = "brcm,bcm2835";
++
++    fragment@0 {
++        target=<&dsi1>;
++
++        __overlay__ {
++            status = "okay";
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port {
++                dsi1_out_port: endpoint {
++                    remote-endpoint = <&panel_dsi_in1>;
++                };
++            };
++
++            display1: panel@0 {
++                compatible = "microtech,mtf080wx26a-v1";
++                reg=<0>;
++                backlight = <&rpi_backlight>;
++                reset-gpios = <&gpio 20 0>;
++                port {
++                    panel_dsi_in1: endpoint {
++                        remote-endpoint = <&dsi1_out_port>;
++                    };
++                };
++            };
++        };
++    };
++
++    fragment@1 {
++        target = <&gpio>;
++        __overlay__ {
++            pwm_pins: pwm_pins {
++                brcm,pins = <12>;
++                brcm,function = <4>; // ALT0
++            };
++        };
++    };
++
++    fragment@2 {
++        target = <&pwm>;
++        frag1: __overlay__ {
++            pinctrl-names = "default";
++            pinctrl-0 = <&pwm_pins>;
++            assigned-clock-rates = <1000000>;
++            status = "okay";
++        };
++    };
++
++    fragment@3 {
++        target-path = "/";
++        __overlay__ {
++            rpi_backlight: rpi_backlight {
++                compatible = "pwm-backlight";
++                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
++                default-brightness-level = <6>;
++                pwms = <&pwm 0 200000 0>;
++                power-supply = <&vdd_3v3_reg>;
++                status = "okay";
++            };
++        };
++    };
++
++    fragment@4 {
++        target = <&i2c6>;
++        frag0: __overlay__ {
++            status = "okay";
++            pinctrl-names = "default";
++            pinctrl-0 = <&i2c6_pins>;
++            clock-frequency = <400000>;
++        };
++    };
++
++    fragment@5 {
++        target = <&i2c6_pins>;
++        __overlay__ {
++            brcm,pins = <22 23>;
++        };
++    };
++
++    fragment@6 {
++            target = <&gpio>;
++            __overlay__ {
++                goodix_pins: goodix_pins {
++                    brcm,pins = <27 26>; // interrupt and reset
++                    brcm,function = <0 0>; // in
++                    brcm,pull = <2 2>; // pull-up
++                };
++            };
++    };
++
++    fragment@7 {
++        target = <&i2c6>;
++        __overlay__ {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            status = "okay";
++
++            gt9xx: gt9xx@14 {
++                compatible = "goodix,gt1151";
++                reg = <0x14>;
++                pinctrl-names = "default";
++                pinctrl-0 = <&goodix_pins>;
++                interrupt-parent = <&gpio>;
++                interrupts = <27 2>; // high-to-low edge triggered
++                irq-gpios = <&gpio 27 0>;
++                reset-gpios = <&gpio 26 0>;
++                touchscreen-size-x = <800>;
++                touchscreen-size-y = <1280>;
++                touchscreen-inverted-y;
++                touchscreen-swapped-x-y;
++            };
++        };
++    };
++};
+diff --git a/arch/arm/boot/dts/overlays/motivo-panel-e-overlay.dts b/arch/arm/boot/dts/overlays/motivo-panel-e-overlay.dts
+new file mode 100644
+index 000000000..bcbcc417e
+--- /dev/null
++++ b/arch/arm/boot/dts/overlays/motivo-panel-e-overlay.dts
+@@ -0,0 +1,117 @@
++/dts-v1/;
++/plugin/;
++
++/ {
++    compatible = "brcm,bcm2835";
++
++    fragment@0 {
++        target=<&dsi1>;
++
++        __overlay__ {
++            status = "okay";
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port {
++                dsi1_out_port: endpoint {
++                    remote-endpoint = <&panel_dsi_in1>;
++                };
++            };
++
++            display1: panel@0 {
++                compatible = "nwe,nwe080";
++                reg=<0>;
++                backlight = <&rpi_backlight>;
++                reset-gpios = <&gpio 20 0>;
++                port {
++                    panel_dsi_in1: endpoint {
++                        remote-endpoint = <&dsi1_out_port>;
++                    };
++                };
++            };
++        };
++    };
++
++    fragment@1 {
++        target = <&gpio>;
++        __overlay__ {
++            pwm_pins: pwm_pins {
++                brcm,pins = <12>;
++                brcm,function = <4>; // ALT0
++            };
++        };
++    };
++
++    fragment@2 {
++        target = <&pwm>;
++        frag1: __overlay__ {
++            pinctrl-names = "default";
++            pinctrl-0 = <&pwm_pins>;
++            assigned-clock-rates = <1000000>;
++            status = "okay";
++        };
++    };
++
++    fragment@3 {
++        target-path = "/";
++        __overlay__ {
++            rpi_backlight: rpi_backlight {
++                compatible = "pwm-backlight";
++                brightness-levels = <0 6 8 12 16 24 32 40 48 64 96 128 160 192 224 255>;
++                default-brightness-level = <6>;
++                pwms = <&pwm 0 200000 0>;
++                power-supply = <&vdd_3v3_reg>;
++                status = "okay";
++            };
++        };
++    };
++
++    fragment@4 {
++        target = <&i2c6>;
++        frag0: __overlay__ {
++            status = "okay";
++            pinctrl-names = "default";
++            pinctrl-0 = <&i2c6_pins>;
++            clock-frequency = <400000>;
++        };
++    };
++
++    fragment@5 {
++        target = <&i2c6_pins>;
++        __overlay__ {
++            brcm,pins = <22 23>;
++        };
++    };
++
++    fragment@6 {
++            target = <&gpio>;
++            __overlay__ {
++                goodix_pins: goodix_pins {
++                    brcm,pins = <27 26>; // interrupt and reset
++                    brcm,function = <0 0>; // in
++                    brcm,pull = <2 2>; // pull-up
++                };
++            };
++    };
++
++    fragment@7 {
++        target = <&i2c6>;
++        __overlay__ {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            status = "okay";
++
++            gt9xx: gt9xx@5d {
++                compatible = "goodix,gt9271";
++                reg = <0x5D>;
++                pinctrl-names = "default";
++                pinctrl-0 = <&goodix_pins>;
++                interrupt-parent = <&gpio>;
++                interrupts = <27 2>; // high-to-low edge triggered
++                irq-gpios = <&gpio 27 0>;
++                reset-gpios = <&gpio 26 0>;
++            };
++        };
++    };
++};
+diff --git a/arch/arm/configs/bcm2711_defconfig b/arch/arm/configs/bcm2711_defconfig
+index 26775ac..494138a 100644
+--- a/arch/arm/configs/bcm2711_defconfig
++++ b/arch/arm/configs/bcm2711_defconfig
+@@ -44,9 +44,10 @@ CONFIG_UACCESS_WITH_MEMCPY=y
+ CONFIG_CMDLINE="console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait"
+ CONFIG_CPU_FREQ=y
+ CONFIG_CPU_FREQ_STAT=y
+-CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
+-CONFIG_CPU_FREQ_GOV_POWERSAVE=y
++CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE=y
++CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
+ CONFIG_CPU_FREQ_GOV_USERSPACE=y
++CONFIG_CPU_FREQ_GOV_ONDEMAND=y
+ CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+ CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
+ CONFIG_CPUFREQ_DT=y
+@@ -67,6 +68,7 @@ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_MAC_PARTITION=y
+ CONFIG_BINFMT_MISC=m
+ CONFIG_ZSWAP=y
++CONFIG_Z3FOLD=m
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_CMA=y
+ CONFIG_LRU_GEN=y
+@@ -93,6 +95,7 @@ CONFIG_IP_MROUTE_MULTIPLE_TABLES=y
+ CONFIG_IP_PIMSM_V1=y
+ CONFIG_IP_PIMSM_V2=y
+ CONFIG_NET_IPVTI=m
++CONFIG_NET_FOU=m
+ CONFIG_NET_FOU_IP_TUNNELS=y
+ CONFIG_INET_AH=m
+ CONFIG_INET_ESP=m
+@@ -987,6 +990,7 @@ CONFIG_DRM=m
+ CONFIG_DRM_LOAD_EDID_FIRMWARE=y
+ CONFIG_DRM_UDL=m
+ CONFIG_DRM_PANEL_SIMPLE=m
++CONFIG_DRM_PANEL_DSI_MT=m
+ CONFIG_DRM_PANEL_ILITEK_ILI9806E=m
+ CONFIG_DRM_PANEL_ILITEK_ILI9881C=m
+ CONFIG_DRM_PANEL_JDI_LT070ME05000=m
+diff --git a/arch/arm64/configs/bcm2711_defconfig b/arch/arm64/configs/bcm2711_defconfig
+index c90df10..4853001 100644
+--- a/arch/arm64/configs/bcm2711_defconfig
++++ b/arch/arm64/configs/bcm2711_defconfig
+@@ -57,9 +57,10 @@ CONFIG_PM_DEBUG=y
+ CONFIG_CPU_IDLE=y
+ CONFIG_CPU_FREQ=y
+ CONFIG_CPU_FREQ_STAT=y
+-CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
+-CONFIG_CPU_FREQ_GOV_POWERSAVE=y
++CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE=y
++CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
+ CONFIG_CPU_FREQ_GOV_USERSPACE=y
++CONFIG_CPU_FREQ_GOV_ONDEMAND=y
+ CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+ CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
+ CONFIG_CPUFREQ_DT=y
+@@ -77,6 +78,7 @@ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_MAC_PARTITION=y
+ CONFIG_BINFMT_MISC=m
+ CONFIG_ZSWAP=y
++CONFIG_Z3FOLD=m
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_CMA=y
+ CONFIG_LRU_GEN=y
+@@ -105,6 +107,7 @@ CONFIG_IP_PIMSM_V1=y
+ CONFIG_IP_PIMSM_V2=y
+ CONFIG_NET_IPVTI=m
+ CONFIG_NET_FOU_IP_TUNNELS=y
++CONFIG_NET_FOU=m
+ CONFIG_INET_AH=m
+ CONFIG_INET_ESP=m
+ CONFIG_INET_IPCOMP=m
+@@ -1027,6 +1030,7 @@ CONFIG_DRM=m
+ CONFIG_DRM_LOAD_EDID_FIRMWARE=y
+ CONFIG_DRM_UDL=m
+ CONFIG_DRM_PANEL_SIMPLE=m
++CONFIG_DRM_PANEL_DSI_MT=m
+ CONFIG_DRM_PANEL_ILITEK_ILI9806E=m
+ CONFIG_DRM_PANEL_ILITEK_ILI9881C=m
+ CONFIG_DRM_PANEL_JDI_LT070ME05000=m
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index 307dd2c..a09cc89 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -867,4 +867,17 @@ config DRM_PANEL_XINPENG_XPP055C272
+ 	  Say Y here if you want to enable support for the Xinpeng
+ 	  XPP055C272 controller for 720x1280 LCD panels with MIPI/RGB/SPI
+ 	  system interfaces.
++
++config DRM_PANEL_DSI_MT
++	tristate "MOTIVO touchscreen panel"
++	depends on OF
++	depends on DRM_MIPI_DSI
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  Say Y here if you want to enable support for the MOTIVO DSI
++	  LCD modules. The panel has a 1280x800 resolution and uses
++	  24 bit RGB per pixel. It provides a dual MIPI DSI interface to
++	  the host and has a built-in LED backlight.
++	  The module will be called panel-dsi-mt.
++
+ endmenu
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+index 9dd9b35..24dcbb7 100644
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -88,3 +88,4 @@ obj-$(CONFIG_DRM_PANEL_VISIONOX_R66451) += panel-visionox-r66451.o
+ obj-$(CONFIG_DRM_PANEL_WAVESHARE_TOUCHSCREEN) += panel-waveshare-dsi.o
+ obj-$(CONFIG_DRM_PANEL_WIDECHIPS_WS2401) += panel-widechips-ws2401.o
+ obj-$(CONFIG_DRM_PANEL_XINPENG_XPP055C272) += panel-xinpeng-xpp055c272.o
++obj-$(CONFIG_DRM_PANEL_DSI_MT) += panel-dsi-mt.o
+diff --git a/drivers/gpu/drm/panel/panel-dsi-mt.c b/drivers/gpu/drm/panel/panel-dsi-mt.c
+new file mode 100644
+index 000000000..6933ec342
+--- /dev/null
++++ b/drivers/gpu/drm/panel/panel-dsi-mt.c
+@@ -0,0 +1,932 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2024 VOLUMIO SRL. All rights reserved.
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sub license,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the
++ * next paragraph) shall be included in all copies or substantial portions
++ * of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ *
++ * Author: Andrew Seredyn <andser@gmail.com>
++ *
++ * This module is rewritten from panel-ilitek modules template
++ */
++
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/regulator/consumer.h>
++
++#include <drm/drm_connector.h>
++#include <drm/drm_crtc.h>
++#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_panel.h>
++
++#include <video/mipi_display.h>
++
++#define RETRY_CMD	3		// Usually if it doesn't recover after the first or second failure, it won't recover at all.
++#define RETRY_DELAY	120		// Retry wait time for the drm vc4 host transfer.
++
++static atomic_t errorFlag = ATOMIC_INIT(0); // When broken atomic modeset userspace detected, reset from here.
++
++
++/*
++ * Use this descriptor struct to describe different panels using the
++ * Motivo ILITEC based display controller template.
++ */
++struct panel_desc {
++	const struct drm_display_mode *modes;
++	unsigned int bpc;
++
++	/**
++	 * @width_mm: width of the panel's active display area
++	 * @height_mm: height of the panel's active display area
++	 */
++	struct {
++		unsigned int width_mm;
++		unsigned int height_mm;
++	} size;
++
++	unsigned long mode_flags;
++	enum mipi_dsi_pixel_format format;
++	const struct panel_init_cmd *init_cmds;
++	unsigned int lanes;
++};
++
++struct mtdsi {
++	struct drm_panel base;
++	struct mipi_dsi_device *dsi;
++
++	const struct panel_desc *desc;
++
++	enum drm_panel_orientation orientation;
++	struct regulator *power;
++	struct gpio_desc *reset;
++};
++
++enum dsi_cmd_type {
++	INIT_DCS_CMD,
++	DELAY_CMD,
++};
++
++struct panel_init_cmd {
++	enum dsi_cmd_type type;
++	size_t len;
++	const char *data;
++};
++
++#define _INIT_DCS_CMD(...) { \
++	.type = INIT_DCS_CMD, \
++	.len = sizeof((char[]){__VA_ARGS__}), \
++	.data = (char[]){__VA_ARGS__} }
++
++#define _INIT_DELAY_CMD(...) { \
++	.type = DELAY_CMD,\
++	.len = sizeof((char[]){__VA_ARGS__}), \
++	.data = (char[]){__VA_ARGS__} }
++
++/* MTDSI-specific commands, add new commands as you decode them */
++#define MTDSI_DCS_SWITCH_PAGE	0xFF
++
++#define _INIT_SWITCH_PAGE_CMD(page) \
++	_INIT_DCS_CMD(MTDSI_DCS_SWITCH_PAGE, 0x98, 0x81, (page))
++
++static const struct panel_init_cmd mt1280800a_init_cmd[] = {
++	_INIT_DELAY_CMD(5),
++/*
++*	_INIT_SWITCH_PAGE_CMD(0x03),
++*	There seems to be more than one version of panel A
++*	(1) 2019 and before;
++*	(2) 2020 and after.
++*	Type 1 does not have command page 3
++*	Type 2 uses defaults and no overwrites
++*	no need to match the defaults anyway.
++*/
++
++	_INIT_SWITCH_PAGE_CMD(0x04),
++	_INIT_DCS_CMD(0x6E, 0x2B),
++	//clamp 15V
++	_INIT_DCS_CMD(0x6F, 0x33),
++	_INIT_DCS_CMD(0x3A, 0xA4),
++	_INIT_DCS_CMD(0x8D, 0x18),
++	_INIT_DCS_CMD(0x87, 0xBA),
++	_INIT_DCS_CMD(0x26, 0x76),
++	_INIT_DCS_CMD(0xB2, 0xD1),
++	_INIT_DCS_CMD(0xB5, 0x02),
++	_INIT_DCS_CMD(0x3A, 0xA4),
++	_INIT_DCS_CMD(0x35, 0x17),
++
++	// Bist Mode scope Page4 set with parameters: 0x2F 0x01
++	//_INIT_DCS_CMD(0x2F, 0x01),
++
++	_INIT_SWITCH_PAGE_CMD(0x01),
++	// Direction rotate selection holds sync in place
++	_INIT_DCS_CMD(0x22, 0x30),
++	// Direction rotate selection end
++	_INIT_DCS_CMD(0x31, 0x00),
++	_INIT_DCS_CMD(0x53, 0x7B),
++	_INIT_DCS_CMD(0x55, 0x7B),
++	_INIT_DCS_CMD(0x50, 0x95),
++	_INIT_DCS_CMD(0x51, 0x95),
++	_INIT_DCS_CMD(0x60, 0x14),
++
++	_INIT_DCS_CMD(0xA0, 0x00),
++	_INIT_DCS_CMD(0xA1, 0x0D),
++	_INIT_DCS_CMD(0xA2, 0x25),
++	_INIT_DCS_CMD(0xA3, 0x11),
++	_INIT_DCS_CMD(0xA4, 0x0C),
++	_INIT_DCS_CMD(0xA5, 0x23),
++	_INIT_DCS_CMD(0xA6, 0x17),
++	_INIT_DCS_CMD(0xA7, 0x1C),
++	_INIT_DCS_CMD(0xA8, 0x82),
++	_INIT_DCS_CMD(0xA9, 0x21),
++	_INIT_DCS_CMD(0xAA, 0x2A),
++	_INIT_DCS_CMD(0xAB, 0x6B),
++	_INIT_DCS_CMD(0xAC, 0x19),
++	_INIT_DCS_CMD(0xAD, 0x14),
++	_INIT_DCS_CMD(0xAE, 0x45),
++	_INIT_DCS_CMD(0xAF, 0x1D),
++	_INIT_DCS_CMD(0xB0, 0x23),
++	_INIT_DCS_CMD(0xB1, 0x52),
++	_INIT_DCS_CMD(0xB2, 0x63),
++	_INIT_DCS_CMD(0xB3, 0x39),
++
++	_INIT_DCS_CMD(0xC0, 0x00),
++	_INIT_DCS_CMD(0xC1, 0x0D),
++	_INIT_DCS_CMD(0xC2, 0x1D),
++	_INIT_DCS_CMD(0xC3, 0x11),
++	_INIT_DCS_CMD(0xC4, 0x0C),
++	_INIT_DCS_CMD(0xC5, 0x23),
++	_INIT_DCS_CMD(0xC6, 0x17),
++	_INIT_DCS_CMD(0xC7, 0x1C),
++	_INIT_DCS_CMD(0xC8, 0x82),
++	_INIT_DCS_CMD(0xC9, 0x21),
++	_INIT_DCS_CMD(0xCA, 0x2A),
++	_INIT_DCS_CMD(0xCB, 0x6B),
++	_INIT_DCS_CMD(0xCC, 0x19),
++	_INIT_DCS_CMD(0xCD, 0x14),
++	_INIT_DCS_CMD(0xCE, 0x45),
++	_INIT_DCS_CMD(0xCF, 0x1D),
++	_INIT_DCS_CMD(0xD0, 0x23),
++	_INIT_DCS_CMD(0xD1, 0x52),
++	_INIT_DCS_CMD(0xD2, 0x63),
++	_INIT_DCS_CMD(0xD3, 0x39),
++
++	_INIT_SWITCH_PAGE_CMD(0x00),
++
++	_INIT_DCS_CMD(MIPI_DCS_SOFT_RESET),
++	_INIT_DELAY_CMD(5),
++	_INIT_DCS_CMD(0x35, 0x00),  // Tearing Effect Line On
++	_INIT_DCS_CMD(MIPI_DCS_EXIT_SLEEP_MODE), // Use MIPI_DCS generic commands instead of (0x11, 0x00) - breaks vc4 drm host transfer
++	_INIT_DELAY_CMD(120),
++	_INIT_DCS_CMD(MIPI_DCS_SET_DISPLAY_ON), // Use MIPI_DCS generic commands instead of (0x29, 0x00) - breaks vc4 drm host transfer
++	_INIT_DELAY_CMD(20),
++
++	//PWM controlled by overlay
++	_INIT_DCS_CMD(0x55, 0x03), // Medium Setting of CABC/DBLC
++
++	{},
++};
++
++static const struct drm_display_mode mt1280800a_default_mode = {
++
++#define HDA		800		// Horizontal Display pixel length
++#define HFPA	52		// 40 - 80		| Horizontal Front Porch
++#define HSLA	8		// 4 - 20		| Horizontal SYN Length
++#define HBPA	48		// 30 - 90		| Horizontal Back Porch
++#define VDA		1280	// Vertical Display pixel length
++#define VFPA	16		//  4 - 40		| Vertical Front Porch
++#define VSLA	6		//  4 - 20		| Vertical SYN Length
++#define VBPA	16		//  4 - 40		| Vertical Back Porch
++
++	.hdisplay		= HDA,
++	.hsync_start	= HDA + HFPA,
++	.hsync_end		= HDA + HFPA + HSLA,
++	.htotal			= HDA + HFPA + HSLA + HBPA,
++
++	.vdisplay		= VDA,
++	.vsync_start	= VDA + VFPA,
++	.vsync_end		= VDA + VFPA + VSLA,
++	.vtotal			= VDA + VFPA + VSLA + VBPA,
++
++	.clock			= (HDA + HFPA + HSLA + HBPA) * (VDA + VFPA + VSLA + VBPA) * 60 / 1000,
++
++	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
++};
++
++static const struct panel_desc mt1280800a_desc = {
++	.modes = &mt1280800a_default_mode,
++	.bpc = 8,
++	.size = {
++		.width_mm = 107,
++		.height_mm = 172,
++	},
++	.lanes = 4,
++	.format = MIPI_DSI_FMT_RGB888,
++	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
++		      MIPI_DSI_MODE_LPM,
++	.init_cmds = mt1280800a_init_cmd,
++};
++
++static const struct panel_init_cmd mt1280800b_init_cmd[] = {
++	_INIT_DELAY_CMD(5),
++	_INIT_SWITCH_PAGE_CMD(0x03),
++	//GIP_1
++	_INIT_DCS_CMD(0x01, 0x00),
++	_INIT_DCS_CMD(0x02, 0x00),
++	_INIT_DCS_CMD(0x03, 0x53),
++	_INIT_DCS_CMD(0x04, 0x53),
++	_INIT_DCS_CMD(0x05, 0x13),
++	_INIT_DCS_CMD(0x06, 0x04),
++	_INIT_DCS_CMD(0x07, 0x02),
++	_INIT_DCS_CMD(0x08, 0x02),
++	_INIT_DCS_CMD(0x09, 0x00),
++	_INIT_DCS_CMD(0x0a, 0x00),
++	_INIT_DCS_CMD(0x0b, 0x00),
++	_INIT_DCS_CMD(0x0c, 0x00),
++	_INIT_DCS_CMD(0x0d, 0x00),
++	_INIT_DCS_CMD(0x0e, 0x00),
++	_INIT_DCS_CMD(0x0f, 0x00),
++	_INIT_DCS_CMD(0x10, 0x00),
++	_INIT_DCS_CMD(0x11, 0x00),
++	_INIT_DCS_CMD(0x12, 0x00),
++	_INIT_DCS_CMD(0x13, 0x00),
++	_INIT_DCS_CMD(0x14, 0x00),
++	_INIT_DCS_CMD(0x15, 0x00),
++	_INIT_DCS_CMD(0x16, 0x00),
++	_INIT_DCS_CMD(0x17, 0x00),
++	_INIT_DCS_CMD(0x18, 0x00),
++	_INIT_DCS_CMD(0x19, 0x00),
++	_INIT_DCS_CMD(0x1a, 0x00),
++	_INIT_DCS_CMD(0x1b, 0x00),
++	_INIT_DCS_CMD(0x1c, 0x00),
++	_INIT_DCS_CMD(0x1d, 0x00),
++	_INIT_DCS_CMD(0x1e, 0xc0),
++	_INIT_DCS_CMD(0x1f, 0x80),
++	_INIT_DCS_CMD(0x20, 0x02),
++	_INIT_DCS_CMD(0x21, 0x09),
++	_INIT_DCS_CMD(0x22, 0x00),
++	_INIT_DCS_CMD(0x23, 0x00),
++	_INIT_DCS_CMD(0x24, 0x00),
++	_INIT_DCS_CMD(0x25, 0x00),
++	_INIT_DCS_CMD(0x26, 0x00),
++	_INIT_DCS_CMD(0x27, 0x00),
++	_INIT_DCS_CMD(0x28, 0x55),
++	_INIT_DCS_CMD(0x29, 0x03),
++	_INIT_DCS_CMD(0x2a, 0x00),
++	_INIT_DCS_CMD(0x2b, 0x00),
++	_INIT_DCS_CMD(0x2c, 0x00),
++	_INIT_DCS_CMD(0x2d, 0x00),
++	_INIT_DCS_CMD(0x2e, 0x00),
++	_INIT_DCS_CMD(0x2f, 0x00),
++	_INIT_DCS_CMD(0x30, 0x00),
++	_INIT_DCS_CMD(0x31, 0x00),
++	_INIT_DCS_CMD(0x32, 0x00),
++	_INIT_DCS_CMD(0x33, 0x00),
++	_INIT_DCS_CMD(0x34, 0x00),
++	_INIT_DCS_CMD(0x35, 0x00),
++	_INIT_DCS_CMD(0x36, 0x00),
++	_INIT_DCS_CMD(0x37, 0x00),
++	_INIT_DCS_CMD(0x38, 0x3C),	//VDD1&2 toggle 1sec
++	_INIT_DCS_CMD(0x39, 0x00),
++	_INIT_DCS_CMD(0x3a, 0x00),
++	_INIT_DCS_CMD(0x3b, 0x00),
++	_INIT_DCS_CMD(0x3c, 0x00),
++	_INIT_DCS_CMD(0x3d, 0x00),
++	_INIT_DCS_CMD(0x3e, 0x00),
++	_INIT_DCS_CMD(0x3f, 0x00),
++	_INIT_DCS_CMD(0x40, 0x00),
++	_INIT_DCS_CMD(0x41, 0x00),
++	_INIT_DCS_CMD(0x42, 0x00),
++	_INIT_DCS_CMD(0x43, 0x00),
++	_INIT_DCS_CMD(0x44, 0x00),
++
++	//GIP_2
++	_INIT_DCS_CMD(0x50, 0x01),
++	_INIT_DCS_CMD(0x51, 0x23),
++	_INIT_DCS_CMD(0x52, 0x45),
++	_INIT_DCS_CMD(0x53, 0x67),
++	_INIT_DCS_CMD(0x54, 0x89),
++	_INIT_DCS_CMD(0x55, 0xab),
++	_INIT_DCS_CMD(0x56, 0x01),
++	_INIT_DCS_CMD(0x57, 0x23),
++	_INIT_DCS_CMD(0x58, 0x45),
++	_INIT_DCS_CMD(0x59, 0x67),
++	_INIT_DCS_CMD(0x5a, 0x89),
++	_INIT_DCS_CMD(0x5b, 0xab),
++	_INIT_DCS_CMD(0x5c, 0xcd),
++	_INIT_DCS_CMD(0x5d, 0xef),
++
++	//GIP_3
++	_INIT_DCS_CMD(0x5e, 0x01),
++	_INIT_DCS_CMD(0x5f, 0x08),	//FW_GOUT_L1   STV2_ODD
++	_INIT_DCS_CMD(0x60, 0x02),	//FW_GOUT_L2
++	_INIT_DCS_CMD(0x61, 0x02),	//FW_GOUT_L3
++	_INIT_DCS_CMD(0x62, 0x0A),	//FW_GOUT_L4   RESET_ODD
++	_INIT_DCS_CMD(0x63, 0x15),	//FW_GOUT_L5
++	_INIT_DCS_CMD(0x64, 0x14),	//FW_GOUT_L6
++	_INIT_DCS_CMD(0x65, 0x02),	//FW_GOUT_L7
++	_INIT_DCS_CMD(0x66, 0x11),	//FW_GOUT_L8   CK11
++	_INIT_DCS_CMD(0x67, 0x10),	//FW_GOUT_L9   CK9
++	_INIT_DCS_CMD(0x68, 0x02),	//FW_GOUT_L10
++	_INIT_DCS_CMD(0x69, 0x0F),	//FW_GOUT_L11   CK7
++	_INIT_DCS_CMD(0x6a, 0x0E),	//FW_GOUT_L12   CK5
++	_INIT_DCS_CMD(0x6b, 0x02),	//FW_GOUT_L13
++	_INIT_DCS_CMD(0x6c, 0x0D),	//FW_GOUT_L14   CK3
++	_INIT_DCS_CMD(0x6d, 0x0C),	//FW_GOUT_L15   CK1
++	_INIT_DCS_CMD(0x6e, 0x06),	//FW_GOUT_L16   STV1_ODD
++	_INIT_DCS_CMD(0x6f, 0x02),	//FW_GOUT_L17
++	_INIT_DCS_CMD(0x70, 0x02),	//FW_GOUT_L18
++	_INIT_DCS_CMD(0x71, 0x02),	//FW_GOUT_L19
++	_INIT_DCS_CMD(0x72, 0x02),	//FW_GOUT_L20
++	_INIT_DCS_CMD(0x73, 0x02),	//FW_GOUT_L21
++	_INIT_DCS_CMD(0x74, 0x02),	//FW_GOUT_L22
++
++	_INIT_DCS_CMD(0x75, 0x06),	//BW_GOUT_L1   STV2_ODD
++	_INIT_DCS_CMD(0x76, 0x02),	//BW_GOUT_L2
++	_INIT_DCS_CMD(0x77, 0x02),	//BW_GOUT_L3
++	_INIT_DCS_CMD(0x78, 0x0A),	//BW_GOUT_L4   RESET_ODD
++	_INIT_DCS_CMD(0x79, 0x15),	//BW_GOUT_L5
++	_INIT_DCS_CMD(0x7a, 0x14),	//BW_GOUT_L6
++	_INIT_DCS_CMD(0x7b, 0x02),	//BW_GOUT_L7
++	_INIT_DCS_CMD(0x7c, 0x10),	//BW_GOUT_L8    CK11
++	_INIT_DCS_CMD(0x7d, 0x11),	//BW_GOUT_L9    CK9
++	_INIT_DCS_CMD(0x7e, 0x02),	//BW_GOUT_L10
++	_INIT_DCS_CMD(0x7f, 0x0C),	//BW_GOUT_L11   CK7
++	_INIT_DCS_CMD(0x80, 0x0D),	//BW_GOUT_L12   CK5
++	_INIT_DCS_CMD(0x81, 0x02),	//BW_GOUT_L13
++	_INIT_DCS_CMD(0x82, 0x0E),	//BW_GOUT_L14   CK3
++	_INIT_DCS_CMD(0x83, 0x0F),	//BW_GOUT_L15   CK1
++	_INIT_DCS_CMD(0x84, 0x08),	//BW_GOUT_L16   STV1_ODD
++	_INIT_DCS_CMD(0x85, 0x02),	//BW_GOUT_L17
++	_INIT_DCS_CMD(0x86, 0x02),	//BW_GOUT_L18
++	_INIT_DCS_CMD(0x87, 0x02),	//BW_GOUT_L19
++	_INIT_DCS_CMD(0x88, 0x02),	//BW_GOUT_L20
++	_INIT_DCS_CMD(0x89, 0x02),	//BW_GOUT_L21
++	_INIT_DCS_CMD(0x8A, 0x02),	//BW_GOUT_L22
++
++	_INIT_SWITCH_PAGE_CMD(0x04),
++	_INIT_DCS_CMD(0x6C, 0x15),
++	_INIT_DCS_CMD(0x6E, 0x30),	//VGH clamp 16.08V
++	_INIT_DCS_CMD(0x6F, 0x33),	// reg vcl + pumping ratio VGH=3x VGL=-2x
++	_INIT_DCS_CMD(0x8D, 0x1F),	//VGL clamp -12.03V
++	_INIT_DCS_CMD(0x87, 0xBA),
++	_INIT_DCS_CMD(0x26, 0x76),
++	_INIT_DCS_CMD(0xB2, 0xD1),
++	_INIT_DCS_CMD(0x35, 0x1F),
++	_INIT_DCS_CMD(0x33, 0x14),
++	_INIT_DCS_CMD(0x3A, 0xA9),
++	_INIT_DCS_CMD(0x3B, 0x98),
++	_INIT_DCS_CMD(0x38, 0x01),
++	_INIT_DCS_CMD(0x39, 0x00),
++	// Bist Mode scope Page4 set with parameters: 0x2F 0x01
++	//_INIT_DCS_CMD(0x2F, 0x01),
++
++	_INIT_SWITCH_PAGE_CMD(0x01),
++	_INIT_DCS_CMD(0x22, 0x0A),
++	_INIT_DCS_CMD(0x31, 0x00),	//column inversion
++	_INIT_DCS_CMD(0x50, 0xC0),	//VREG1OUT=5V
++	_INIT_DCS_CMD(0x51, 0xC0),	//VREG2OUT=-5V
++	_INIT_DCS_CMD(0x53, 0x47),	//VCOM1
++	_INIT_DCS_CMD(0x55, 0x7A),	//VCOM2
++	_INIT_DCS_CMD(0x60, 0x28),	//SDT
++	_INIT_DCS_CMD(0x2E, 0xC8),	//1280 GATE NL SEL
++
++	_INIT_DCS_CMD(0xA0, 0x01),	//VP255 Gamma P
++	_INIT_DCS_CMD(0xA1, 0x10),	//VP251
++	_INIT_DCS_CMD(0xA2, 0x1B),	//VP247
++	_INIT_DCS_CMD(0xA3, 0x0C),	//VP243
++	_INIT_DCS_CMD(0xA4, 0x14),	//VP239
++	_INIT_DCS_CMD(0xA5, 0x25),	//VP231
++	_INIT_DCS_CMD(0xA6, 0x1A),	//VP219
++	_INIT_DCS_CMD(0xA7, 0x1D),	//VP203
++	_INIT_DCS_CMD(0xA8, 0x68),	//VP175
++	_INIT_DCS_CMD(0xA9, 0x1B),	//VP144
++	_INIT_DCS_CMD(0xAA, 0x26),	//VP111
++	_INIT_DCS_CMD(0xAB, 0x5B),	//VP80
++	_INIT_DCS_CMD(0xAC, 0x1B),	//VP52
++	_INIT_DCS_CMD(0xAD, 0x17),	//VP36
++	_INIT_DCS_CMD(0xAE, 0x4F),	//VP24
++	_INIT_DCS_CMD(0xAF, 0x24),	//VP16
++	_INIT_DCS_CMD(0xB0, 0x2A),	//VP12
++	_INIT_DCS_CMD(0xB1, 0x4E),	//VP8
++	_INIT_DCS_CMD(0xB2, 0x5F),	//VP4
++	_INIT_DCS_CMD(0xB3, 0x39),	//VP0
++
++	_INIT_DCS_CMD(0xC0, 0x0F),	//VN255 GAMMA N
++	_INIT_DCS_CMD(0xC1, 0x1B),	//VN251
++	_INIT_DCS_CMD(0xC2, 0x27),	//VN247
++	_INIT_DCS_CMD(0xC3, 0x16),	//VN243
++	_INIT_DCS_CMD(0xC4, 0x14),	//VN239
++	_INIT_DCS_CMD(0xC5, 0x28),	//VN231
++	_INIT_DCS_CMD(0xC6, 0x1D),	//VN219
++	_INIT_DCS_CMD(0xC7, 0x21),	//VN203
++	_INIT_DCS_CMD(0xC8, 0x6C),	//VN175
++	_INIT_DCS_CMD(0xC9, 0x1B),	//VN144
++	_INIT_DCS_CMD(0xCA, 0x26),	//VN111
++	_INIT_DCS_CMD(0xCB, 0x5B),	//VN80
++	_INIT_DCS_CMD(0xCC, 0x1B),	//VN52
++	_INIT_DCS_CMD(0xCD, 0x1B),	//VN36
++	_INIT_DCS_CMD(0xCE, 0x4F),	//VN24
++	_INIT_DCS_CMD(0xCF, 0x24),	//VN16
++	_INIT_DCS_CMD(0xD0, 0x2A),	//VN12
++	_INIT_DCS_CMD(0xD1, 0x4E),	//VN8
++	_INIT_DCS_CMD(0xD2, 0x5F),	//VN4
++	_INIT_DCS_CMD(0xD3, 0x39),	//VN0
++
++	_INIT_SWITCH_PAGE_CMD(0x00),
++
++	_INIT_DCS_CMD(MIPI_DCS_SOFT_RESET),
++	_INIT_DELAY_CMD(10),
++	_INIT_DCS_CMD(0x35, 0x00),  // Tearing Effect Line On
++	_INIT_DCS_CMD(MIPI_DCS_EXIT_SLEEP_MODE), // Use MIPI_DCS generic commands instead of (0x11, 0x00) - breaks vc4 drm host transfer
++	_INIT_DELAY_CMD(120),
++	_INIT_DCS_CMD(MIPI_DCS_SET_DISPLAY_ON), // Use MIPI_DCS generic commands instead of (0x29, 0x00) - breaks vc4 drm host transfer
++	_INIT_DELAY_CMD(20),
++
++	//PWM controlled by overlay
++	_INIT_DCS_CMD(0x55, 0x01), // Conservative Setting of CABC/DBLC
++
++	{},
++};
++
++static const struct drm_display_mode mt1280800b_default_mode = {
++
++#define HDB		800		// Horizontal Display pixel length
++#define HFPB	40		// 40 - 80		| Horizontal Front Porch
++#define HSLB	40		// 4 - 20		| Horizontal SYN Length
++#define HBPB	20		// 30 - 90		| Horizontal Back Porch
++#define VDB		1280	// Vertical Display pixel length
++#define VFPB	8		//  4 - 40		| Vertical Front Porch
++#define VSLB	8		//  4 - 20		| Vertical SYN Length
++#define VBPB	4		//  4 - 40		| Vertical Back Porch
++
++	.hdisplay		= HDB,
++	.hsync_start	= HDB + HFPB,
++	.hsync_end		= HDB + HFPB + HSLB,
++	.htotal			= HDB + HFPB + HSLB + HBPB,
++
++	.vdisplay		= VDB,
++	.vsync_start	= VDB + VFPB,
++	.vsync_end		= VDB + VFPB + VSLB,
++	.vtotal			= VDB + VFPB + VSLB + VBPB,
++
++	.clock			= (HDB + HFPB + HSLB + HBPB) * (VDB + VFPB + VSLB + VBPB) * 60 / 1000,
++
++	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
++};
++
++static const struct panel_desc mt1280800b_desc = {
++	.modes = &mt1280800b_default_mode,
++	.bpc = 8,
++	.size = {
++		.width_mm = 107,
++		.height_mm = 172,
++	},
++	.lanes = 4,
++	.format = MIPI_DSI_FMT_RGB888,
++	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
++		      MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_LPM,
++	.init_cmds = mt1280800b_init_cmd,
++};
++
++static inline struct mtdsi *to_mtdsi(struct drm_panel *panel)
++{
++	return container_of(panel, struct mtdsi, base);
++}
++
++static int mtdsi_init_dcs_cmd(struct mtdsi *ctx)
++{
++	struct mipi_dsi_device *dsi = ctx->dsi;
++	struct drm_panel *panel = &ctx->base;
++	int i, err = 0, retry = 0;
++
++	if (ctx->desc->init_cmds) {
++		const struct panel_init_cmd *init_cmds = ctx->desc->init_cmds;
++
++		for (i = 0; init_cmds[i].len != 0; i++) {
++			const struct panel_init_cmd *cmd = &init_cmds[i];
++		do {
++			switch (cmd->type) {
++			case DELAY_CMD:
++				msleep(cmd->data[0]);
++				err = 0;
++				break;
++
++			case INIT_DCS_CMD:
++				err = mipi_dsi_dcs_write(dsi, cmd->data[0],
++							 cmd->len <= 1 ? NULL :
++							 &cmd->data[1],
++							 cmd->len - 1);
++				break;
++
++			default:
++				err = -EINVAL;
++			}
++
++			if (err) msleep(RETRY_DELAY);
++			++retry;
++			}
++			while (err && retry < RETRY_CMD);
++
++			if (err < 0) {
++				dev_err(panel->dev,
++					"DSI: Failed to write init commands %u\n", i);
++				return err;
++			}
++		}
++	}
++	return 0;
++}
++
++static int mtdsi_switch_page(struct mipi_dsi_device *dsi, u8 page)
++{
++	int retry,ret;
++	const struct panel_init_cmd cmd = _INIT_SWITCH_PAGE_CMD(page);
++
++    retry = 0;
++    do {
++	ret = mipi_dsi_dcs_write(dsi, cmd.data[0],
++				 cmd.len <= 1 ? NULL :
++				 &cmd.data[1],
++				 cmd.len - 1);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret) {
++		dev_err(&dsi->dev,
++			"DSI: Error switching panel controller page (%d)\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int mtdsi_enter_sleep_mode(struct mtdsi *ctx)
++{
++	struct mipi_dsi_device *dsi = ctx->dsi;
++	int retry,ret;
++
++	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
++
++	// MIPI needs to return to the LP11 state before enabling all blocks inside the display
++
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_nop(ctx->dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(&dsi->dev, "DSI: Failed to return to the LP11 state prior sleep mode enter: %d\n", ret);
++//		return 0; //Do not error here yet. This is DSI transfer warmup.
++	}
++
++	usleep_range(1000, 20000);
++
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_set_display_off(dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(&dsi->dev, "DSI: Failed to set display off: %d\n", ret);
++		return ret;
++	}
++
++	msleep(5);
++
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(&dsi->dev, "DSI: Failed to enter sleep mode: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int mtdsi_disable(struct drm_panel *panel)
++{
++	struct mtdsi *ctx = to_mtdsi(panel);
++	int ret;
++
++	ret = mtdsi_enter_sleep_mode(ctx);
++	if (ret < 0) {
++		dev_err(panel->dev, "DSI: Failed to set panel off: %d\n", ret);
++        atomic_set(&errorFlag, 1);
++		return ret;
++	}
++
++	atomic_set(&errorFlag, 0);
++
++	msleep(150);
++
++	return 0;
++}
++
++static int mtdsi_unprepare(struct drm_panel *panel)
++{
++	struct mtdsi *ctx = to_mtdsi(panel);
++
++	gpiod_set_value_cansleep(ctx->reset, 1);
++	usleep_range(1000, 2000);
++	regulator_disable(ctx->power);
++
++	return 0;
++}
++
++static int mtdsi_prepare(struct drm_panel *panel)
++{
++	struct mtdsi *ctx = to_mtdsi(panel);
++	int retry,ret;
++
++    atomic_set(&errorFlag, 0); // Clear the error flag
++
++	ret = regulator_enable(ctx->power);
++
++	usleep_range(1000, 2000);
++
++	// MIPI needs to keep the LP11 state before the lcm_reset pin is pulled high
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_nop(ctx->dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(panel->dev, "DSI: Failed to return to the LP11 state prior prepare: %d\n", ret);
++//		return 0; //Do not error here yet. This is DSI transfer warmup.
++	}
++	usleep_range(1000, 2000);
++
++	gpiod_set_value_cansleep(ctx->reset, 0);
++	msleep(50);
++	gpiod_set_value_cansleep(ctx->reset, 1);
++	usleep_range(6000, 10000);
++
++	ret = mtdsi_init_dcs_cmd(ctx);
++	if (ret < 0) {
++		dev_err(panel->dev, "DSI: Failed to initialize panel: %d\n", ret);
++		goto poweroff;
++	}
++
++	return 0;
++
++poweroff:
++	regulator_disable(ctx->power);
++	usleep_range(1000, 2000);
++	gpiod_set_value_cansleep(ctx->reset, 0);
++
++	return ret;
++}
++
++static int mtdsi_exit_sleep_mode(struct mtdsi *ctx)
++{
++	struct mipi_dsi_device *dsi = ctx->dsi;
++	int retry,ret;
++
++	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
++
++	// MIPI needs to return to the LP11 state before enabling all blocks inside the display
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_nop(ctx->dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(&dsi->dev, "DSI: Failed to return to the LP11 state prior sleep mode exit: %d\n", ret);
++//		return 0; //Do not error here yet. This is DSI transfer warmup.
++	}
++	usleep_range(1000, 20000);
++
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(&dsi->dev, "DSI: Failed to exit sleep mode: %d\n", ret);
++		return ret;
++	}
++
++	msleep(10);
++
++    retry = 0;
++    do {
++		ret = mipi_dsi_dcs_set_display_on(dsi);
++		if (ret) msleep(RETRY_DELAY);
++		++retry;
++    }
++    while (ret && retry < RETRY_CMD);
++	if (ret < 0) {
++		dev_err(&dsi->dev, "DSI: Failed to set display on: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int mtdsi_enable(struct drm_panel *panel)
++{
++	struct mtdsi *ctx = to_mtdsi(panel);
++	struct mipi_dsi_device *dsi = ctx->dsi;
++	int ret;
++
++	mtdsi_switch_page(dsi, 0x00);
++
++	msleep(5);
++
++	ret = mtdsi_exit_sleep_mode(ctx);
++	if (ret < 0) {
++		dev_err(panel->dev, "DSI: Failed to activate panel: %d\n", ret);
++        atomic_set(&errorFlag, 1);
++		return ret;
++	}
++
++	atomic_set(&errorFlag, 0);
++
++	msleep(120);
++
++	return 0;
++}
++
++static int mtdsi_get_modes(struct drm_panel *panel,
++			      struct drm_connector *connector)
++{
++	struct mtdsi *ctx = to_mtdsi(panel);
++	const struct drm_display_mode *m = ctx->desc->modes;
++	struct drm_display_mode *mode;
++
++	mode = drm_mode_duplicate(connector->dev, m);
++	if (!mode) {
++		dev_err(panel->dev, "DSI: Failed to add mode %ux%u@%u\n",
++			m->hdisplay, m->vdisplay, drm_mode_vrefresh(m));
++		return -ENOMEM;
++	}
++
++	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
++	drm_mode_set_name(mode);
++	drm_mode_probed_add(connector, mode);
++
++	connector->display_info.width_mm = ctx->desc->size.width_mm;
++	connector->display_info.height_mm = ctx->desc->size.height_mm;
++	connector->display_info.bpc = ctx->desc->bpc;
++
++	/*
++	 * TODO: Remove once all drm drivers call
++	 * drm_connector_set_orientation_from_panel()
++	 */
++
++	drm_connector_set_panel_orientation(connector, DRM_MODE_PANEL_ORIENTATION_LEFT_UP);
++
++	return 1;
++}
++
++static enum drm_panel_orientation mtdsi_get_orientation(struct drm_panel *panel)
++{
++	struct mtdsi *ctx = to_mtdsi(panel);
++
++	return ctx->orientation;
++}
++
++static const struct drm_panel_funcs mtdsi_funcs = {
++	.disable = mtdsi_disable,
++	.unprepare = mtdsi_unprepare,
++	.prepare = mtdsi_prepare,
++	.enable = mtdsi_enable,
++	.get_modes = mtdsi_get_modes,
++	.get_orientation = mtdsi_get_orientation,
++};
++
++static int mtdsi_add(struct mtdsi *ctx)
++{
++	struct device *dev = &ctx->dsi->dev;
++	int err;
++
++	ctx->power = devm_regulator_get(dev, "power");
++	if (IS_ERR(ctx->power))
++		return PTR_ERR(ctx->power);
++
++	ctx->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(ctx->reset)) {
++		dev_err(dev, "DSI: Cannot get reset-gpios %ld\n",
++			PTR_ERR(ctx->reset));
++		return PTR_ERR(ctx->reset);
++	}
++
++	gpiod_set_value_cansleep(ctx->reset, 0);
++
++	drm_panel_init(&ctx->base, dev, &mtdsi_funcs,
++		       DRM_MODE_CONNECTOR_DSI);
++	err = of_drm_get_panel_orientation(dev->of_node, &ctx->orientation);
++	if (err < 0) {
++		dev_err(dev, "DSI: %pOF: Failed to get orientation %d\n", dev->of_node, err);
++		return err;
++	}
++
++	err = drm_panel_of_backlight(&ctx->base);
++	if (err)
++		return err;
++
++	ctx->base.funcs = &mtdsi_funcs;
++	ctx->base.dev = &ctx->dsi->dev;
++
++	ctx->base.prepare_prev_first = true;
++
++	drm_panel_add(&ctx->base);
++
++	return 0;
++}
++
++static int mtdsi_probe(struct mipi_dsi_device *dsi)
++{
++	struct mtdsi *ctx;
++	int ret;
++	const struct panel_desc *desc;
++
++	ctx = devm_kzalloc(&dsi->dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	desc = of_device_get_match_data(&dsi->dev);
++	dsi->lanes = desc->lanes;
++	dsi->format = desc->format;
++	dsi->mode_flags = desc->mode_flags;
++	ctx->desc = desc;
++	ctx->dsi = dsi;
++	ret = mtdsi_add(ctx);
++	if (ret < 0)
++		return ret;
++
++	mipi_dsi_set_drvdata(dsi, ctx);
++
++	ret = mipi_dsi_attach(dsi);
++	if (ret)
++		drm_panel_remove(&ctx->base);
++
++	return ret;
++}
++
++static void mtdsi_remove(struct mipi_dsi_device *dsi)
++{
++	struct mtdsi *ctx = mipi_dsi_get_drvdata(dsi);
++	int ret;
++
++	ret = mipi_dsi_detach(dsi);
++	if (ret < 0)
++		dev_err(&dsi->dev, "DSI: Failed to detach from DSI host: %d\n", ret);
++
++	if (ctx->base.dev)
++		drm_panel_remove(&ctx->base);
++}
++
++static const struct of_device_id mtdsi_of_match[] = {
++	{ .compatible = "motivo,mt1280800a", .data = &mt1280800a_desc },
++	{ .compatible = "motivo,mt1280800b", .data = &mt1280800b_desc },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, mtdsi_of_match);
++
++static struct mipi_dsi_driver mtdsi_driver = {
++	.driver = {
++		.name = "panel-dsi-mt",
++		.of_match_table = mtdsi_of_match,
++	},
++	.probe = mtdsi_probe,
++	.remove = mtdsi_remove,
++};
++module_mipi_dsi_driver(mtdsi_driver);
++
++MODULE_AUTHOR("Andrew Seredyn <andser@gmail.com>");
++MODULE_DESCRIPTION("DRM Driver for MOTIVO MIPI DSI panels.");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
+index a77ce9f..4a05289 100644
+--- a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
++++ b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
+@@ -4,6 +4,7 @@
+  * Copyright (C) 2021, Henson Li <henson@cutiepi.io>
+  * Copyright (C) 2021, Penk Chen <penk@cutiepi.io>
+  * Copyright (C) 2022, Mark Williams <mark@crystalfontz.com>
++ * Copyright (C) 2023, Dario Murgia <dario@volumio.org>
+  */
+ 
+ #include <linux/delay.h>
+@@ -1650,6 +1651,650 @@ static const struct ili9881c_instr rpi_7inch_init[] = {
+ 	ILI9881C_COMMAND_INSTR(0xD3, 0x39),
+ };
+ 
++static const struct ili9881c_instr z80033_ph31_init[] = {
++	ILI9881C_SWITCH_PAGE_INSTR(3),
++	//GIP_1
++	ILI9881C_COMMAND_INSTR(0x01, 0x00),
++	ILI9881C_COMMAND_INSTR(0x02, 0x00),
++	ILI9881C_COMMAND_INSTR(0x03, 0x57),
++	ILI9881C_COMMAND_INSTR(0x04, 0xD3),
++	ILI9881C_COMMAND_INSTR(0x05, 0x00),
++	ILI9881C_COMMAND_INSTR(0x06, 0x11),
++	ILI9881C_COMMAND_INSTR(0x07, 0x08),
++	ILI9881C_COMMAND_INSTR(0x08, 0x00),
++	ILI9881C_COMMAND_INSTR(0x09, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0a, 0x3F),
++	ILI9881C_COMMAND_INSTR(0x0b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0f, 0x3F),
++	ILI9881C_COMMAND_INSTR(0x10, 0x3F),
++	ILI9881C_COMMAND_INSTR(0x11, 0x00),
++	ILI9881C_COMMAND_INSTR(0x12, 0x00),
++	ILI9881C_COMMAND_INSTR(0x13, 0x00),
++	ILI9881C_COMMAND_INSTR(0x14, 0x00),
++	ILI9881C_COMMAND_INSTR(0x15, 0x00),
++	ILI9881C_COMMAND_INSTR(0x16, 0x00),
++	ILI9881C_COMMAND_INSTR(0x17, 0x00),
++	ILI9881C_COMMAND_INSTR(0x18, 0x00),
++	ILI9881C_COMMAND_INSTR(0x19, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1e, 0x40),
++	ILI9881C_COMMAND_INSTR(0x1f, 0x80),
++	ILI9881C_COMMAND_INSTR(0x20, 0x06),
++	ILI9881C_COMMAND_INSTR(0x21, 0x01),
++	ILI9881C_COMMAND_INSTR(0x22, 0x00),
++	ILI9881C_COMMAND_INSTR(0x23, 0x00),
++	ILI9881C_COMMAND_INSTR(0x24, 0x00),
++	ILI9881C_COMMAND_INSTR(0x25, 0x00),
++	ILI9881C_COMMAND_INSTR(0x26, 0x00),
++	ILI9881C_COMMAND_INSTR(0x27, 0x00),
++	ILI9881C_COMMAND_INSTR(0x28, 0x33),
++	ILI9881C_COMMAND_INSTR(0x29, 0x33),
++	ILI9881C_COMMAND_INSTR(0x2a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2f, 0x00),
++	ILI9881C_COMMAND_INSTR(0x30, 0x00),
++	ILI9881C_COMMAND_INSTR(0x31, 0x00),
++	ILI9881C_COMMAND_INSTR(0x32, 0x00),
++	ILI9881C_COMMAND_INSTR(0x33, 0x00),
++	ILI9881C_COMMAND_INSTR(0x34, 0x00),
++	ILI9881C_COMMAND_INSTR(0x35, 0x00),
++	ILI9881C_COMMAND_INSTR(0x36, 0x00),
++	ILI9881C_COMMAND_INSTR(0x37, 0x00),
++	ILI9881C_COMMAND_INSTR(0x38, 0x78),
++	ILI9881C_COMMAND_INSTR(0x39, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3f, 0x00),
++	ILI9881C_COMMAND_INSTR(0x40, 0x00),
++	ILI9881C_COMMAND_INSTR(0x41, 0x00),
++	ILI9881C_COMMAND_INSTR(0x42, 0x00),
++	ILI9881C_COMMAND_INSTR(0x43, 0x00),
++	ILI9881C_COMMAND_INSTR(0x44, 0x00),
++
++	//GIP_2
++	ILI9881C_COMMAND_INSTR(0x50, 0x00),
++	ILI9881C_COMMAND_INSTR(0x51, 0x23),
++	ILI9881C_COMMAND_INSTR(0x52, 0x45),
++	ILI9881C_COMMAND_INSTR(0x53, 0x67),
++	ILI9881C_COMMAND_INSTR(0x54, 0x89),
++	ILI9881C_COMMAND_INSTR(0x55, 0xab),
++	ILI9881C_COMMAND_INSTR(0x56, 0x01),
++	ILI9881C_COMMAND_INSTR(0x57, 0x23),
++	ILI9881C_COMMAND_INSTR(0x58, 0x45),
++	ILI9881C_COMMAND_INSTR(0x59, 0x67),
++	ILI9881C_COMMAND_INSTR(0x5a, 0x89),
++	ILI9881C_COMMAND_INSTR(0x5b, 0xab),
++	ILI9881C_COMMAND_INSTR(0x5c, 0xcd),
++	ILI9881C_COMMAND_INSTR(0x5d, 0xef),
++
++	//GIP_3
++	ILI9881C_COMMAND_INSTR(0x5e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x5f, 0x0D),
++	ILI9881C_COMMAND_INSTR(0x60, 0x0D),
++	ILI9881C_COMMAND_INSTR(0x61, 0x0C),
++	ILI9881C_COMMAND_INSTR(0x62, 0x0C),
++	ILI9881C_COMMAND_INSTR(0x63, 0x0F),
++	ILI9881C_COMMAND_INSTR(0x64, 0x0F),
++	ILI9881C_COMMAND_INSTR(0x65, 0x0E),
++	ILI9881C_COMMAND_INSTR(0x66, 0x0E),
++	ILI9881C_COMMAND_INSTR(0x67, 0x08),
++	ILI9881C_COMMAND_INSTR(0x68, 0x02),
++	ILI9881C_COMMAND_INSTR(0x69, 0x02),
++	ILI9881C_COMMAND_INSTR(0x6a, 0x02),
++	ILI9881C_COMMAND_INSTR(0x6b, 0x02),
++	ILI9881C_COMMAND_INSTR(0x6c, 0x02),
++	ILI9881C_COMMAND_INSTR(0x6d, 0x02),
++	ILI9881C_COMMAND_INSTR(0x6e, 0x02),
++	ILI9881C_COMMAND_INSTR(0x6f, 0x02),
++	ILI9881C_COMMAND_INSTR(0x70, 0x14),
++	ILI9881C_COMMAND_INSTR(0x71, 0x15),
++	ILI9881C_COMMAND_INSTR(0x72, 0x06),
++	ILI9881C_COMMAND_INSTR(0x73, 0x02),
++	ILI9881C_COMMAND_INSTR(0x74, 0x02),
++	ILI9881C_COMMAND_INSTR(0x75, 0x0D),
++	ILI9881C_COMMAND_INSTR(0x76, 0x0D),
++	ILI9881C_COMMAND_INSTR(0x77, 0x0C),
++	ILI9881C_COMMAND_INSTR(0x78, 0x0C),
++	ILI9881C_COMMAND_INSTR(0x79, 0x0F),
++	ILI9881C_COMMAND_INSTR(0x7a, 0x0F),
++	ILI9881C_COMMAND_INSTR(0x7b, 0x0E),
++	ILI9881C_COMMAND_INSTR(0x7c, 0x0E),
++	ILI9881C_COMMAND_INSTR(0x7d, 0x08),
++	ILI9881C_COMMAND_INSTR(0x7e, 0x02),
++	ILI9881C_COMMAND_INSTR(0x7f, 0x02),
++	ILI9881C_COMMAND_INSTR(0x80, 0x02),
++	ILI9881C_COMMAND_INSTR(0x81, 0x02),
++	ILI9881C_COMMAND_INSTR(0x82, 0x02),
++	ILI9881C_COMMAND_INSTR(0x83, 0x02),
++	ILI9881C_COMMAND_INSTR(0x84, 0x02),
++	ILI9881C_COMMAND_INSTR(0x85, 0x02),
++	ILI9881C_COMMAND_INSTR(0x86, 0x14),
++	ILI9881C_COMMAND_INSTR(0x87, 0x15),
++	ILI9881C_COMMAND_INSTR(0x88, 0x06),
++	ILI9881C_COMMAND_INSTR(0x89, 0x02),
++	ILI9881C_COMMAND_INSTR(0x8A, 0x02),
++
++	ILI9881C_SWITCH_PAGE_INSTR(4),
++	ILI9881C_COMMAND_INSTR(0x6E, 0x3B),
++	ILI9881C_COMMAND_INSTR(0x6F, 0x57),
++	ILI9881C_COMMAND_INSTR(0x3A, 0x24),
++	ILI9881C_COMMAND_INSTR(0x8D, 0x1F),
++	ILI9881C_COMMAND_INSTR(0x87, 0xBA),
++	ILI9881C_COMMAND_INSTR(0xB2, 0xD1),
++	ILI9881C_COMMAND_INSTR(0x88, 0x0B),
++	ILI9881C_COMMAND_INSTR(0x38, 0x01),
++	ILI9881C_COMMAND_INSTR(0x39, 0x00),
++	ILI9881C_COMMAND_INSTR(0xB5, 0x07),
++	ILI9881C_COMMAND_INSTR(0x31, 0x75),
++	ILI9881C_COMMAND_INSTR(0x3B, 0x98),
++
++	ILI9881C_SWITCH_PAGE_INSTR(1),
++	ILI9881C_COMMAND_INSTR(0x22, 0x0A), // Direction rotate
++	ILI9881C_COMMAND_INSTR(0x31, 0x09), // Column inversion
++	ILI9881C_COMMAND_INSTR(0x35, 0x07),
++	ILI9881C_COMMAND_INSTR(0x53, 0x87),
++	ILI9881C_COMMAND_INSTR(0x55, 0x84),
++	ILI9881C_COMMAND_INSTR(0x50, 0x86),
++	ILI9881C_COMMAND_INSTR(0x51, 0x82),
++	ILI9881C_COMMAND_INSTR(0x60, 0x10),
++	ILI9881C_COMMAND_INSTR(0x62, 0x00),
++
++	//========Gamma START========
++	ILI9881C_COMMAND_INSTR(0xA0, 0x00),
++	ILI9881C_COMMAND_INSTR(0xA1, 0x12),
++	ILI9881C_COMMAND_INSTR(0xA2, 0x1F),
++	ILI9881C_COMMAND_INSTR(0xA3, 0x12),
++	ILI9881C_COMMAND_INSTR(0xA4, 0x16),
++	ILI9881C_COMMAND_INSTR(0xA5, 0x29),
++	ILI9881C_COMMAND_INSTR(0xA6, 0x1E),
++	ILI9881C_COMMAND_INSTR(0xA7, 0x1F),
++	ILI9881C_COMMAND_INSTR(0xA8, 0x7E),
++	ILI9881C_COMMAND_INSTR(0xA9, 0x1B),
++	ILI9881C_COMMAND_INSTR(0xAA, 0x28),
++	ILI9881C_COMMAND_INSTR(0xAB, 0x6D),
++	ILI9881C_COMMAND_INSTR(0xAC, 0x19),
++	ILI9881C_COMMAND_INSTR(0xAD, 0x18),
++	ILI9881C_COMMAND_INSTR(0xAE, 0x4C),
++	ILI9881C_COMMAND_INSTR(0xAF, 0x1E),
++	ILI9881C_COMMAND_INSTR(0xB0, 0x23),
++	ILI9881C_COMMAND_INSTR(0xB1, 0x52),
++	ILI9881C_COMMAND_INSTR(0xB2, 0x6D),
++	ILI9881C_COMMAND_INSTR(0xB3, 0x3F),
++	// Neg Register
++	ILI9881C_COMMAND_INSTR(0xC0, 0x00),
++	ILI9881C_COMMAND_INSTR(0xC1, 0x12),
++	ILI9881C_COMMAND_INSTR(0xC2, 0x20),
++	ILI9881C_COMMAND_INSTR(0xC3, 0x10),
++	ILI9881C_COMMAND_INSTR(0xC4, 0x13),
++	ILI9881C_COMMAND_INSTR(0xC5, 0x27),
++	ILI9881C_COMMAND_INSTR(0xC6, 0x1B),
++	ILI9881C_COMMAND_INSTR(0xC7, 0x1D),
++	ILI9881C_COMMAND_INSTR(0xC8, 0x75),
++	ILI9881C_COMMAND_INSTR(0xC9, 0x1F),
++	ILI9881C_COMMAND_INSTR(0xCA, 0x28),
++	ILI9881C_COMMAND_INSTR(0xCB, 0x68),
++	ILI9881C_COMMAND_INSTR(0xCC, 0x1A),
++	ILI9881C_COMMAND_INSTR(0xCD, 0x18),
++	ILI9881C_COMMAND_INSTR(0xCE, 0x4D),
++	ILI9881C_COMMAND_INSTR(0xCF, 0x25),
++	ILI9881C_COMMAND_INSTR(0xD0, 0x2E),
++	ILI9881C_COMMAND_INSTR(0xD1, 0x53),
++	ILI9881C_COMMAND_INSTR(0xD2, 0x60),
++	ILI9881C_COMMAND_INSTR(0xD3, 0x3F),
++	//========Gamma END========
++
++	ILI9881C_SWITCH_PAGE_INSTR(0),
++	ILI9881C_COMMAND_INSTR(0x35, 0x00),
++	ILI9881C_COMMAND_INSTR(0x11, 0x00),
++	//Delay,120
++	ILI9881C_COMMAND_INSTR(0x29, 0x00),
++	//Delay,20
++};
++
++static const struct ili9881c_instr mtf080wx26a_v1_init[] = {
++	ILI9881C_SWITCH_PAGE_INSTR(3),
++	//GIP_1
++	ILI9881C_COMMAND_INSTR(0x01, 0x00),
++	ILI9881C_COMMAND_INSTR(0x02, 0x00),
++	ILI9881C_COMMAND_INSTR(0x03, 0x53),
++	ILI9881C_COMMAND_INSTR(0x04, 0x53),
++	ILI9881C_COMMAND_INSTR(0x05, 0x13),
++	ILI9881C_COMMAND_INSTR(0x06, 0x04),
++	ILI9881C_COMMAND_INSTR(0x07, 0x02),
++	ILI9881C_COMMAND_INSTR(0x08, 0x02),
++	ILI9881C_COMMAND_INSTR(0x09, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0f, 0x00),
++	ILI9881C_COMMAND_INSTR(0x10, 0x00),
++	ILI9881C_COMMAND_INSTR(0x11, 0x00),
++	ILI9881C_COMMAND_INSTR(0x12, 0x00),
++	ILI9881C_COMMAND_INSTR(0x13, 0x00),
++	ILI9881C_COMMAND_INSTR(0x14, 0x00),
++	ILI9881C_COMMAND_INSTR(0x15, 0x00),
++	ILI9881C_COMMAND_INSTR(0x16, 0x00),
++	ILI9881C_COMMAND_INSTR(0x17, 0x00),
++	ILI9881C_COMMAND_INSTR(0x18, 0x00),
++	ILI9881C_COMMAND_INSTR(0x19, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1d, 0x00),
++
++	ILI9881C_COMMAND_INSTR(0x1e, 0xc0),
++	ILI9881C_COMMAND_INSTR(0x1f, 0x80),
++	ILI9881C_COMMAND_INSTR(0x20, 0x02),
++	ILI9881C_COMMAND_INSTR(0x21, 0x09),
++	ILI9881C_COMMAND_INSTR(0x22, 0x00),
++	ILI9881C_COMMAND_INSTR(0x23, 0x00),
++	ILI9881C_COMMAND_INSTR(0x24, 0x00),
++	ILI9881C_COMMAND_INSTR(0x25, 0x00),
++	ILI9881C_COMMAND_INSTR(0x26, 0x00),
++	ILI9881C_COMMAND_INSTR(0x27, 0x00),
++	ILI9881C_COMMAND_INSTR(0x28, 0x55),
++	ILI9881C_COMMAND_INSTR(0x29, 0x03),
++	ILI9881C_COMMAND_INSTR(0x2a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2f, 0x00),
++	ILI9881C_COMMAND_INSTR(0x30, 0x00),
++	ILI9881C_COMMAND_INSTR(0x31, 0x00),
++	ILI9881C_COMMAND_INSTR(0x32, 0x00),
++	ILI9881C_COMMAND_INSTR(0x33, 0x00),
++	ILI9881C_COMMAND_INSTR(0x34, 0x00),
++	ILI9881C_COMMAND_INSTR(0x35, 0x00),
++	ILI9881C_COMMAND_INSTR(0x36, 0x00),
++	ILI9881C_COMMAND_INSTR(0x37, 0x00),
++
++	ILI9881C_COMMAND_INSTR(0x38, 0x3C),	//VDD1&2 toggle 1sec
++	ILI9881C_COMMAND_INSTR(0x39, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3f, 0x00),
++	ILI9881C_COMMAND_INSTR(0x40, 0x00),
++	ILI9881C_COMMAND_INSTR(0x41, 0x00),
++	ILI9881C_COMMAND_INSTR(0x42, 0x00),
++	ILI9881C_COMMAND_INSTR(0x43, 0x00),
++	ILI9881C_COMMAND_INSTR(0x44, 0x00),
++
++	//GIP_2
++	ILI9881C_COMMAND_INSTR(0x50, 0x01),
++	ILI9881C_COMMAND_INSTR(0x51, 0x23),
++	ILI9881C_COMMAND_INSTR(0x52, 0x45),
++	ILI9881C_COMMAND_INSTR(0x53, 0x67),
++	ILI9881C_COMMAND_INSTR(0x54, 0x89),
++	ILI9881C_COMMAND_INSTR(0x55, 0xab),
++	ILI9881C_COMMAND_INSTR(0x56, 0x01),
++	ILI9881C_COMMAND_INSTR(0x57, 0x23),
++	ILI9881C_COMMAND_INSTR(0x58, 0x45),
++	ILI9881C_COMMAND_INSTR(0x59, 0x67),
++	ILI9881C_COMMAND_INSTR(0x5a, 0x89),
++	ILI9881C_COMMAND_INSTR(0x5b, 0xab),
++	ILI9881C_COMMAND_INSTR(0x5c, 0xcd),
++	ILI9881C_COMMAND_INSTR(0x5d, 0xef),
++
++	//GIP_3
++	ILI9881C_COMMAND_INSTR(0x5e, 0x01),
++	ILI9881C_COMMAND_INSTR(0x5f, 0x08),	//FW_GOUT_L1   STV2_ODD
++	ILI9881C_COMMAND_INSTR(0x60, 0x02),	//FW_GOUT_L2
++	ILI9881C_COMMAND_INSTR(0x61, 0x02),	//FW_GOUT_L3
++	ILI9881C_COMMAND_INSTR(0x62, 0x0A),	//FW_GOUT_L4   RESET_ODD
++	ILI9881C_COMMAND_INSTR(0x63, 0x15),	//FW_GOUT_L5
++	ILI9881C_COMMAND_INSTR(0x64, 0x14),	//FW_GOUT_L6
++	ILI9881C_COMMAND_INSTR(0x65, 0x02),	//FW_GOUT_L7
++	ILI9881C_COMMAND_INSTR(0x66, 0x11),	//FW_GOUT_L8   CK11
++	ILI9881C_COMMAND_INSTR(0x67, 0x10),	//FW_GOUT_L9   CK9
++	ILI9881C_COMMAND_INSTR(0x68, 0x02),	//FW_GOUT_L10
++	ILI9881C_COMMAND_INSTR(0x69, 0x0F),	//FW_GOUT_L11   CK7
++	ILI9881C_COMMAND_INSTR(0x6a, 0x0E),	//FW_GOUT_L12   CK5
++	ILI9881C_COMMAND_INSTR(0x6b, 0x02),	//FW_GOUT_L13
++	ILI9881C_COMMAND_INSTR(0x6c, 0x0D),	//FW_GOUT_L14   CK3
++	ILI9881C_COMMAND_INSTR(0x6d, 0x0C),	//FW_GOUT_L15   CK1
++	ILI9881C_COMMAND_INSTR(0x6e, 0x06),	//FW_GOUT_L16   STV1_ODD
++	ILI9881C_COMMAND_INSTR(0x6f, 0x02),	//FW_GOUT_L17
++	ILI9881C_COMMAND_INSTR(0x70, 0x02),	//FW_GOUT_L18
++	ILI9881C_COMMAND_INSTR(0x71, 0x02),	//FW_GOUT_L19
++	ILI9881C_COMMAND_INSTR(0x72, 0x02),	//FW_GOUT_L20
++	ILI9881C_COMMAND_INSTR(0x73, 0x02),	//FW_GOUT_L21
++	ILI9881C_COMMAND_INSTR(0x74, 0x02),	//FW_GOUT_L22
++
++	ILI9881C_COMMAND_INSTR(0x75, 0x06),	//BW_GOUT_L1   STV2_ODD
++	ILI9881C_COMMAND_INSTR(0x76, 0x02),	//BW_GOUT_L2
++	ILI9881C_COMMAND_INSTR(0x77, 0x02),	//BW_GOUT_L3
++	ILI9881C_COMMAND_INSTR(0x78, 0x0A),	//BW_GOUT_L4   RESET_ODD
++	ILI9881C_COMMAND_INSTR(0x79, 0x15),	//BW_GOUT_L5
++	ILI9881C_COMMAND_INSTR(0x7a, 0x14),	//BW_GOUT_L6
++	ILI9881C_COMMAND_INSTR(0x7b, 0x02),	//BW_GOUT_L7
++	ILI9881C_COMMAND_INSTR(0x7c, 0x10),	//BW_GOUT_L8   CK11
++	ILI9881C_COMMAND_INSTR(0x7d, 0x11),	//BW_GOUT_L9   CK9
++	ILI9881C_COMMAND_INSTR(0x7e, 0x02),	//BW_GOUT_L10
++	ILI9881C_COMMAND_INSTR(0x7f, 0x0C),	//BW_GOUT_L11   CK7
++	ILI9881C_COMMAND_INSTR(0x80, 0x0D),	//BW_GOUT_L12   CK5
++	ILI9881C_COMMAND_INSTR(0x81, 0x02),	//BW_GOUT_L13
++	ILI9881C_COMMAND_INSTR(0x82, 0x0E),	//BW_GOUT_L14   CK3
++	ILI9881C_COMMAND_INSTR(0x83, 0x0F),	//BW_GOUT_L15   CK1
++	ILI9881C_COMMAND_INSTR(0x84, 0x08),	//BW_GOUT_L16   STV1_ODD
++	ILI9881C_COMMAND_INSTR(0x85, 0x02),	//BW_GOUT_L17
++	ILI9881C_COMMAND_INSTR(0x86, 0x02),	//BW_GOUT_L18
++	ILI9881C_COMMAND_INSTR(0x87, 0x02),	//BW_GOUT_L19
++	ILI9881C_COMMAND_INSTR(0x88, 0x02),	//BW_GOUT_L20
++	ILI9881C_COMMAND_INSTR(0x89, 0x02),	//BW_GOUT_L21
++	ILI9881C_COMMAND_INSTR(0x8A, 0x02),	//BW_GOUT_L22
++
++	ILI9881C_SWITCH_PAGE_INSTR(4),
++	ILI9881C_COMMAND_INSTR(0x6C, 0x15),
++	ILI9881C_COMMAND_INSTR(0x6E, 0x30),	//VGH clamp 16.08V
++	ILI9881C_COMMAND_INSTR(0x6F, 0x33),	//reg vcl + pumping ratio VGH=3x VGL=-2x
++	ILI9881C_COMMAND_INSTR(0x8D, 0x1F),	//VGL clamp -12.03V
++	ILI9881C_COMMAND_INSTR(0x87, 0xBA),
++	ILI9881C_COMMAND_INSTR(0x26, 0x76),
++	ILI9881C_COMMAND_INSTR(0xB2, 0xD1),
++	ILI9881C_COMMAND_INSTR(0x35, 0x1F),
++	ILI9881C_COMMAND_INSTR(0x33, 0x14),
++	ILI9881C_COMMAND_INSTR(0x3A, 0xA9),
++	ILI9881C_COMMAND_INSTR(0x3B, 0x3D),	//For 4003D
++	ILI9881C_COMMAND_INSTR(0x38, 0x01),
++	ILI9881C_COMMAND_INSTR(0x39, 0x00),
++
++	ILI9881C_SWITCH_PAGE_INSTR(1),
++	ILI9881C_COMMAND_INSTR(0x22, 0x0A),
++	ILI9881C_COMMAND_INSTR(0x31, 0x00),	//column inversion
++	ILI9881C_COMMAND_INSTR(0x40, 0x53),	//for EXT_CPCK_SEL for 4003D
++	ILI9881C_COMMAND_INSTR(0x50, 0xC0),	//VREG1OUT=5V
++	ILI9881C_COMMAND_INSTR(0x51, 0xC0),	//VREG2OUT=-5V
++	ILI9881C_COMMAND_INSTR(0x53, 0x47),	//VCOM1
++	ILI9881C_COMMAND_INSTR(0x55, 0x46),	//7A //VCOM2
++	ILI9881C_COMMAND_INSTR(0x60, 0x28),	//SDT
++	ILI9881C_COMMAND_INSTR(0x2E, 0xC8),	//1280 GATE NL SEL
++
++	ILI9881C_COMMAND_INSTR(0xA0, 0x01),	//VP255	Gamma P
++	ILI9881C_COMMAND_INSTR(0xA1, 0x10),	//VP251
++	ILI9881C_COMMAND_INSTR(0xA2, 0x1B),	//VP247
++	ILI9881C_COMMAND_INSTR(0xA3, 0x0C),	//VP243
++	ILI9881C_COMMAND_INSTR(0xA4, 0x14),	//VP239
++	ILI9881C_COMMAND_INSTR(0xA5, 0x25),	//VP231
++	ILI9881C_COMMAND_INSTR(0xA6, 0x1A),	//VP219
++	ILI9881C_COMMAND_INSTR(0xA7, 0x1D),	//VP203
++	ILI9881C_COMMAND_INSTR(0xA8, 0x68),	//VP175
++	ILI9881C_COMMAND_INSTR(0xA9, 0x1B),	//VP144
++	ILI9881C_COMMAND_INSTR(0xAA, 0x26),	//VP111
++	ILI9881C_COMMAND_INSTR(0xAB, 0x5B),	//VP80
++	ILI9881C_COMMAND_INSTR(0xAC, 0x1B),	//VP52
++	ILI9881C_COMMAND_INSTR(0xAD, 0x17),	//VP36
++	ILI9881C_COMMAND_INSTR(0xAE, 0x4F),	//VP24
++	ILI9881C_COMMAND_INSTR(0xAF, 0x24),	//VP16
++	ILI9881C_COMMAND_INSTR(0xB0, 0x2A),	//VP12
++	ILI9881C_COMMAND_INSTR(0xB1, 0x4E),	//VP8
++	ILI9881C_COMMAND_INSTR(0xB2, 0x5F),	//VP4
++	ILI9881C_COMMAND_INSTR(0xB3, 0x39),	//VP0
++
++	ILI9881C_COMMAND_INSTR(0xC0, 0x0F),	//VN255 GAMMA N
++	ILI9881C_COMMAND_INSTR(0xC1, 0x1B),	//VN251
++	ILI9881C_COMMAND_INSTR(0xC2, 0x27),	//VN247
++	ILI9881C_COMMAND_INSTR(0xC3, 0x16),	//VN243
++	ILI9881C_COMMAND_INSTR(0xC4, 0x14),	//VN239
++	ILI9881C_COMMAND_INSTR(0xC5, 0x28),	//VN231
++	ILI9881C_COMMAND_INSTR(0xC6, 0x1D),	//VN219
++	ILI9881C_COMMAND_INSTR(0xC7, 0x21),	//VN203
++	ILI9881C_COMMAND_INSTR(0xC8, 0x6C),	//VN175
++	ILI9881C_COMMAND_INSTR(0xC9, 0x1B),	//VN144
++	ILI9881C_COMMAND_INSTR(0xCA, 0x26),	//VN111
++	ILI9881C_COMMAND_INSTR(0xCB, 0x5B),	//VN80
++	ILI9881C_COMMAND_INSTR(0xCC, 0x1B),	//VN52
++	ILI9881C_COMMAND_INSTR(0xCD, 0x1B),	//VN36
++	ILI9881C_COMMAND_INSTR(0xCE, 0x4F),	//VN24
++	ILI9881C_COMMAND_INSTR(0xCF, 0x24),	//VN16
++	ILI9881C_COMMAND_INSTR(0xD0, 0x2A),	//VN12
++	ILI9881C_COMMAND_INSTR(0xD1, 0x4E),	//VN8
++	ILI9881C_COMMAND_INSTR(0xD2, 0x5F),	//VN4
++	ILI9881C_COMMAND_INSTR(0xD3, 0x39),	//VN0
++
++	ILI9881C_SWITCH_PAGE_INSTR(0),
++	ILI9881C_COMMAND_INSTR(0x35, 0x00),
++	ILI9881C_COMMAND_INSTR(0x11, 0x00),	//sleep out
++	//Delay(120),
++	ILI9881C_COMMAND_INSTR(0x29, 0x00),	//display on
++	//Delay(20),
++};
++
++static const struct ili9881c_instr rv080wxm_init[] = {
++	ILI9881C_SWITCH_PAGE_INSTR(3),
++	//GIP_1
++	ILI9881C_COMMAND_INSTR(0x01, 0x00),
++	ILI9881C_COMMAND_INSTR(0x02, 0x00),
++	ILI9881C_COMMAND_INSTR(0x03, 0x53),
++	ILI9881C_COMMAND_INSTR(0x04, 0x53),
++	ILI9881C_COMMAND_INSTR(0x05, 0x13),
++	ILI9881C_COMMAND_INSTR(0x06, 0x04),
++	ILI9881C_COMMAND_INSTR(0x07, 0x02),
++	ILI9881C_COMMAND_INSTR(0x08, 0x02),
++	ILI9881C_COMMAND_INSTR(0x09, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x0f, 0x00),
++	ILI9881C_COMMAND_INSTR(0x10, 0x00),
++	ILI9881C_COMMAND_INSTR(0x11, 0x00),
++	ILI9881C_COMMAND_INSTR(0x12, 0x00),
++	ILI9881C_COMMAND_INSTR(0x13, 0x00),
++	ILI9881C_COMMAND_INSTR(0x14, 0x00),
++	ILI9881C_COMMAND_INSTR(0x15, 0x00),
++	ILI9881C_COMMAND_INSTR(0x16, 0x00),
++	ILI9881C_COMMAND_INSTR(0x17, 0x00),
++	ILI9881C_COMMAND_INSTR(0x18, 0x00),
++	ILI9881C_COMMAND_INSTR(0x19, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x1e, 0xc0),
++	ILI9881C_COMMAND_INSTR(0x1f, 0x80),
++	ILI9881C_COMMAND_INSTR(0x20, 0x02),
++	ILI9881C_COMMAND_INSTR(0x21, 0x09),
++	ILI9881C_COMMAND_INSTR(0x22, 0x00),
++	ILI9881C_COMMAND_INSTR(0x23, 0x00),
++	ILI9881C_COMMAND_INSTR(0x24, 0x00),
++	ILI9881C_COMMAND_INSTR(0x25, 0x00),
++	ILI9881C_COMMAND_INSTR(0x26, 0x00),
++	ILI9881C_COMMAND_INSTR(0x27, 0x00),
++	ILI9881C_COMMAND_INSTR(0x28, 0x55),
++	ILI9881C_COMMAND_INSTR(0x29, 0x03),
++	ILI9881C_COMMAND_INSTR(0x2a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x2f, 0x00),
++	ILI9881C_COMMAND_INSTR(0x30, 0x00),
++	ILI9881C_COMMAND_INSTR(0x31, 0x00),
++	ILI9881C_COMMAND_INSTR(0x32, 0x00),
++	ILI9881C_COMMAND_INSTR(0x33, 0x00),
++	ILI9881C_COMMAND_INSTR(0x34, 0x00),
++	ILI9881C_COMMAND_INSTR(0x35, 0x00),
++	ILI9881C_COMMAND_INSTR(0x36, 0x00),
++	ILI9881C_COMMAND_INSTR(0x37, 0x00),
++	ILI9881C_COMMAND_INSTR(0x38, 0x3C),	//VDD1&2 toggle 1sec
++	ILI9881C_COMMAND_INSTR(0x39, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3a, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3b, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3c, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3d, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3e, 0x00),
++	ILI9881C_COMMAND_INSTR(0x3f, 0x00),
++	ILI9881C_COMMAND_INSTR(0x40, 0x00),
++	ILI9881C_COMMAND_INSTR(0x41, 0x00),
++	ILI9881C_COMMAND_INSTR(0x42, 0x00),
++	ILI9881C_COMMAND_INSTR(0x43, 0x00),
++	ILI9881C_COMMAND_INSTR(0x44, 0x00),
++
++	//GIP_2
++	ILI9881C_COMMAND_INSTR(0x50, 0x01),
++	ILI9881C_COMMAND_INSTR(0x51, 0x23),
++	ILI9881C_COMMAND_INSTR(0x52, 0x45),
++	ILI9881C_COMMAND_INSTR(0x53, 0x67),
++	ILI9881C_COMMAND_INSTR(0x54, 0x89),
++	ILI9881C_COMMAND_INSTR(0x55, 0xab),
++	ILI9881C_COMMAND_INSTR(0x56, 0x01),
++	ILI9881C_COMMAND_INSTR(0x57, 0x23),
++	ILI9881C_COMMAND_INSTR(0x58, 0x45),
++	ILI9881C_COMMAND_INSTR(0x59, 0x67),
++	ILI9881C_COMMAND_INSTR(0x5a, 0x89),
++	ILI9881C_COMMAND_INSTR(0x5b, 0xab),
++	ILI9881C_COMMAND_INSTR(0x5c, 0xcd),
++	ILI9881C_COMMAND_INSTR(0x5d, 0xef),
++
++	//GIP_3
++	ILI9881C_COMMAND_INSTR(0x5e, 0x01),
++	ILI9881C_COMMAND_INSTR(0x5f, 0x08),	//FW_GOUT_L1   STV2_ODD
++	ILI9881C_COMMAND_INSTR(0x60, 0x02),	//FW_GOUT_L2
++	ILI9881C_COMMAND_INSTR(0x61, 0x02),	//FW_GOUT_L3
++	ILI9881C_COMMAND_INSTR(0x62, 0x0A),	//FW_GOUT_L4   RESET_ODD
++	ILI9881C_COMMAND_INSTR(0x63, 0x15),	//FW_GOUT_L5
++	ILI9881C_COMMAND_INSTR(0x64, 0x14),	//FW_GOUT_L6
++	ILI9881C_COMMAND_INSTR(0x65, 0x02),	//FW_GOUT_L7
++	ILI9881C_COMMAND_INSTR(0x66, 0x11),	//FW_GOUT_L8   CK11
++	ILI9881C_COMMAND_INSTR(0x67, 0x10),	//FW_GOUT_L9   CK9
++	ILI9881C_COMMAND_INSTR(0x68, 0x02),	//FW_GOUT_L10
++	ILI9881C_COMMAND_INSTR(0x69, 0x0F),	//FW_GOUT_L11   CK7
++	ILI9881C_COMMAND_INSTR(0x6a, 0x0E),	//FW_GOUT_L12   CK5
++	ILI9881C_COMMAND_INSTR(0x6b, 0x02),	//FW_GOUT_L13
++	ILI9881C_COMMAND_INSTR(0x6c, 0x0D),	//FW_GOUT_L14   CK3
++	ILI9881C_COMMAND_INSTR(0x6d, 0x0C),	//FW_GOUT_L15   CK1
++	ILI9881C_COMMAND_INSTR(0x6e, 0x06),	//FW_GOUT_L16   STV1_ODD
++	ILI9881C_COMMAND_INSTR(0x6f, 0x02),	//FW_GOUT_L17
++	ILI9881C_COMMAND_INSTR(0x70, 0x02),	//FW_GOUT_L18
++	ILI9881C_COMMAND_INSTR(0x71, 0x02),	//FW_GOUT_L19
++	ILI9881C_COMMAND_INSTR(0x72, 0x02),	//FW_GOUT_L20
++	ILI9881C_COMMAND_INSTR(0x73, 0x02),	//FW_GOUT_L21
++	ILI9881C_COMMAND_INSTR(0x74, 0x02),	//FW_GOUT_L22
++
++	ILI9881C_COMMAND_INSTR(0x75, 0x06),	//BW_GOUT_L1   STV2_ODD
++	ILI9881C_COMMAND_INSTR(0x76, 0x02),	//BW_GOUT_L2
++	ILI9881C_COMMAND_INSTR(0x77, 0x02),	//BW_GOUT_L3
++	ILI9881C_COMMAND_INSTR(0x78, 0x0A),	//BW_GOUT_L4   RESET_ODD
++	ILI9881C_COMMAND_INSTR(0x79, 0x15),	//BW_GOUT_L5
++	ILI9881C_COMMAND_INSTR(0x7a, 0x14),	//BW_GOUT_L6
++	ILI9881C_COMMAND_INSTR(0x7b, 0x02),	//BW_GOUT_L7
++	ILI9881C_COMMAND_INSTR(0x7c, 0x10),	//BW_GOUT_L8    CK11
++	ILI9881C_COMMAND_INSTR(0x7d, 0x11),	//BW_GOUT_L9    CK9
++	ILI9881C_COMMAND_INSTR(0x7e, 0x02),	//BW_GOUT_L10
++	ILI9881C_COMMAND_INSTR(0x7f, 0x0C),	//BW_GOUT_L11   CK7
++	ILI9881C_COMMAND_INSTR(0x80, 0x0D),	//BW_GOUT_L12   CK5
++	ILI9881C_COMMAND_INSTR(0x81, 0x02),	//BW_GOUT_L13
++	ILI9881C_COMMAND_INSTR(0x82, 0x0E),	//BW_GOUT_L14   CK3
++	ILI9881C_COMMAND_INSTR(0x83, 0x0F),	//BW_GOUT_L15   CK1
++	ILI9881C_COMMAND_INSTR(0x84, 0x08),	//BW_GOUT_L16   STV1_ODD
++	ILI9881C_COMMAND_INSTR(0x85, 0x02),	//BW_GOUT_L17
++	ILI9881C_COMMAND_INSTR(0x86, 0x02),	//BW_GOUT_L18
++	ILI9881C_COMMAND_INSTR(0x87, 0x02),	//BW_GOUT_L19
++	ILI9881C_COMMAND_INSTR(0x88, 0x02),	//BW_GOUT_L20
++	ILI9881C_COMMAND_INSTR(0x89, 0x02),	//BW_GOUT_L21
++	ILI9881C_COMMAND_INSTR(0x8A, 0x02),	//BW_GOUT_L22
++
++	ILI9881C_SWITCH_PAGE_INSTR(4),
++	ILI9881C_COMMAND_INSTR(0x6C, 0x15),
++	ILI9881C_COMMAND_INSTR(0x6E, 0x30),	//VGH clamp 16.08V
++	ILI9881C_COMMAND_INSTR(0x6F, 0x33),	// reg vcl + pumping ratio VGH=3x VGL=-2x
++	ILI9881C_COMMAND_INSTR(0x8D, 0x1F),	//VGL clamp -12.03V
++	ILI9881C_COMMAND_INSTR(0x87, 0xBA),
++	ILI9881C_COMMAND_INSTR(0x26, 0x76),
++	ILI9881C_COMMAND_INSTR(0xB2, 0xD1),
++	ILI9881C_COMMAND_INSTR(0x35, 0x1F),
++	ILI9881C_COMMAND_INSTR(0x33, 0x14),
++	ILI9881C_COMMAND_INSTR(0x3A, 0xA9),
++	ILI9881C_COMMAND_INSTR(0x3B, 0x98),
++	ILI9881C_COMMAND_INSTR(0x38, 0x01),
++	ILI9881C_COMMAND_INSTR(0x39, 0x00),
++
++	ILI9881C_SWITCH_PAGE_INSTR(1),
++	ILI9881C_COMMAND_INSTR(0x22, 0x0A),
++	ILI9881C_COMMAND_INSTR(0x31, 0x00),	//column inversion
++	ILI9881C_COMMAND_INSTR(0x50, 0xC0),	//VREG1OUT=5V
++	ILI9881C_COMMAND_INSTR(0x51, 0xC0),	//VREG2OUT=-5V
++	ILI9881C_COMMAND_INSTR(0x53, 0x47),	//VCOM1
++	ILI9881C_COMMAND_INSTR(0x55, 0x7A),	//VCOM2
++	ILI9881C_COMMAND_INSTR(0x60, 0x28),	//SDT
++	ILI9881C_COMMAND_INSTR(0x2E, 0xC8),	//1280 GATE NL SEL
++
++	ILI9881C_COMMAND_INSTR(0xA0, 0x01),	//VP255 Gamma P
++	ILI9881C_COMMAND_INSTR(0xA1, 0x10),	//VP251
++	ILI9881C_COMMAND_INSTR(0xA2, 0x1B),	//VP247
++	ILI9881C_COMMAND_INSTR(0xA3, 0x0C),	//VP243
++	ILI9881C_COMMAND_INSTR(0xA4, 0x14),	//VP239
++	ILI9881C_COMMAND_INSTR(0xA5, 0x25),	//VP231
++	ILI9881C_COMMAND_INSTR(0xA6, 0x1A),	//VP219
++	ILI9881C_COMMAND_INSTR(0xA7, 0x1D),	//VP203
++	ILI9881C_COMMAND_INSTR(0xA8, 0x68),	//VP175
++	ILI9881C_COMMAND_INSTR(0xA9, 0x1B),	//VP144
++	ILI9881C_COMMAND_INSTR(0xAA, 0x26),	//VP111
++	ILI9881C_COMMAND_INSTR(0xAB, 0x5B),	//VP80
++	ILI9881C_COMMAND_INSTR(0xAC, 0x1B),	//VP52
++	ILI9881C_COMMAND_INSTR(0xAD, 0x17),	//VP36
++	ILI9881C_COMMAND_INSTR(0xAE, 0x4F),	//VP24
++	ILI9881C_COMMAND_INSTR(0xAF, 0x24),	//VP16
++	ILI9881C_COMMAND_INSTR(0xB0, 0x2A),	//VP12
++	ILI9881C_COMMAND_INSTR(0xB1, 0x4E),	//VP8
++	ILI9881C_COMMAND_INSTR(0xB2, 0x5F),	//VP4
++	ILI9881C_COMMAND_INSTR(0xB3, 0x39),	//VP0
++
++	ILI9881C_COMMAND_INSTR(0xC0, 0x0F),	//VN255 GAMMA N
++	ILI9881C_COMMAND_INSTR(0xC1, 0x1B),	//VN251
++	ILI9881C_COMMAND_INSTR(0xC2, 0x27),	//VN247
++	ILI9881C_COMMAND_INSTR(0xC3, 0x16),	//VN243
++	ILI9881C_COMMAND_INSTR(0xC4, 0x14),	//VN239
++	ILI9881C_COMMAND_INSTR(0xC5, 0x28),	//VN231
++	ILI9881C_COMMAND_INSTR(0xC6, 0x1D),	//VN219
++	ILI9881C_COMMAND_INSTR(0xC7, 0x21),	//VN203
++	ILI9881C_COMMAND_INSTR(0xC8, 0x6C),	//VN175
++	ILI9881C_COMMAND_INSTR(0xC9, 0x1B),	//VN144
++	ILI9881C_COMMAND_INSTR(0xCA, 0x26),	//VN111
++	ILI9881C_COMMAND_INSTR(0xCB, 0x5B),	//VN80
++	ILI9881C_COMMAND_INSTR(0xCC, 0x1B),	//VN52
++	ILI9881C_COMMAND_INSTR(0xCD, 0x1B),	//VN36
++	ILI9881C_COMMAND_INSTR(0xCE, 0x4F),	//VN24
++	ILI9881C_COMMAND_INSTR(0xCF, 0x24),	//VN16
++	ILI9881C_COMMAND_INSTR(0xD0, 0x2A),	//VN12
++	ILI9881C_COMMAND_INSTR(0xD1, 0x4E),	//VN8
++	ILI9881C_COMMAND_INSTR(0xD2, 0x5F),	//VN4
++	ILI9881C_COMMAND_INSTR(0xD3, 0x39),	//VN0
++
++	ILI9881C_SWITCH_PAGE_INSTR(0),
++	ILI9881C_COMMAND_INSTR(0x11, 0x00),	//sleep out
++	//Delay(150),
++	ILI9881C_COMMAND_INSTR(0x11, 0x00),	//sleep out
++	//Delay(200),
++};
++
++static const struct ili9881c_instr mt1280800_init[] = {
++	ILI9881C_SWITCH_PAGE_INSTR(0),
++	ILI9881C_COMMAND_INSTR(0x11, 0x00),
++	//Delay(120),
++	ILI9881C_COMMAND_INSTR(0x29, 0x00),
++	//Delay(20),
++};
++
+ static inline struct ili9881c *panel_to_ili9881c(struct drm_panel *panel)
+ {
+ 	return container_of(panel, struct ili9881c, panel);
+@@ -1916,6 +2561,74 @@ static const struct drm_display_mode rpi_7inch_default_mode = {
+ 	.height_mm	= 151,
+ };
+ 
++static const struct drm_display_mode z80033_ph31_default_mode = {
++	.clock 		= 77000,
++
++	.hdisplay	= 800,
++	.hsync_start	= 800 + 120, // 920
++	.hsync_end	= 800 + 120 + 20, // 940
++	.htotal		= 800 + 120 + 20 + 20, // 960
++
++	.vdisplay	= 1280,
++	.vsync_start	= 1280 + 30, // 1310
++	.vsync_end	= 1280 + 30 + 4, // 1314
++	.vtotal		= 1280 + 30 + 4 + 8, // 1322
++
++	.width_mm 	= 107,
++	.height_mm 	= 172,
++};
++
++static const struct drm_display_mode mtf080wx26a_v1_default_mode = {
++	.clock 		= 71000,
++
++	.hdisplay	= 800,
++	.hsync_start	= 800 + 80,
++	.hsync_end	= 800 + 80 + 80,
++	.htotal		= 800 + 80 + 80 + 20,
++
++	.vdisplay	= 1280,
++	.vsync_start	= 1280 + 12,
++	.vsync_end	= 1280 + 12 + 20,
++	.vtotal		= 1280 + 12 + 20 + 4,
++
++	.width_mm 	= 107,
++	.height_mm 	= 172,
++};
++
++static const struct drm_display_mode rv080wxm_default_mode = {
++	.clock 		= 68000,
++
++	.hdisplay	= 800,
++	.hsync_start	= 800 + 40,
++	.hsync_end	= 800 + 40 + 20,
++	.htotal		= 800 + 40 + 20 + 20,
++
++	.vdisplay	= 1280,
++	.vsync_start	= 1280 + 8,
++	.vsync_end	= 1280 + 8 + 8,
++	.vtotal		= 1280 + 8 + 8 + 4,
++
++	.width_mm 	= 107,
++	.height_mm 	= 172,
++};
++
++static const struct drm_display_mode mt1280800_default_mode = {
++	.clock 		= 73728,
++
++	.hdisplay	= 800,
++	.hsync_start	= 800 + 52,
++	.hsync_end	= 800 + 52 + 8,
++	.htotal		= 800 + 52 + 8 + 48,
++
++	.vdisplay	= 1280,
++	.vsync_start	= 1280 + 16,
++	.vsync_end	= 1280 + 16 + 6,
++	.vtotal		= 1280 + 16 + 6 + 16,
++
++	.width_mm 	= 107,
++	.height_mm 	= 172,
++};
++
+ static int ili9881c_get_modes(struct drm_panel *panel,
+ 			      struct drm_connector *connector)
+ {
+@@ -2088,8 +2801,38 @@ static const struct ili9881c_desc rpi_7inch_desc = {
+ 	.mode = &rpi_7inch_default_mode,
+ 	.mode_flags =  MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_LPM,
+ 	.lanes = 2,
+-	.flags = ILI9881_FLAGS_NO_SHUTDOWN_CMDS |
+-		 ILI9881_FLAGS_PANEL_ON_IN_PREPARE,
++};
++
++static const struct ili9881c_desc z80033_ph31_desc = {
++	.init = z80033_ph31_init,
++	.init_length = ARRAY_SIZE(z80033_ph31_init),
++	.mode = &z80033_ph31_default_mode,
++	.mode_flags = MIPI_DSI_MODE_VIDEO_SYNC_PULSE | MIPI_DSI_MODE_VIDEO,
++	.lanes = 4,
++};
++
++static const struct ili9881c_desc mtf080wx26a_v1_desc = {
++	.init = mtf080wx26a_v1_init,
++	.init_length = ARRAY_SIZE(mtf080wx26a_v1_init),
++	.mode = &mtf080wx26a_v1_default_mode,
++	.mode_flags = MIPI_DSI_MODE_VIDEO_SYNC_PULSE | MIPI_DSI_MODE_VIDEO,
++	.lanes = 4,
++};
++
++static const struct ili9881c_desc rv080wxm_desc = {
++	.init = rv080wxm_init,
++	.init_length = ARRAY_SIZE(rv080wxm_init),
++	.mode = &rv080wxm_default_mode,
++	.mode_flags = MIPI_DSI_MODE_VIDEO_SYNC_PULSE | MIPI_DSI_MODE_VIDEO,
++	.lanes = 4,
++};
++
++static const struct ili9881c_desc mt1280800_desc = {
++	.init = mt1280800_init,
++	.init_length = ARRAY_SIZE(mt1280800_init),
++	.mode = &mt1280800_default_mode,
++	.mode_flags = MIPI_DSI_MODE_VIDEO_SYNC_PULSE | MIPI_DSI_MODE_VIDEO,
++	.lanes = 4,
+ };
+ 
+ static const struct of_device_id ili9881c_of_match[] = {
+@@ -2101,6 +2844,10 @@ static const struct of_device_id ili9881c_of_match[] = {
+ 	{ .compatible = "crystalfontz,cfaf7201280a0_050tx", .data = &cfaf7201280a0_050tx_desc },
+ 	{ .compatible = "raspberrypi,dsi-5inch", &rpi_5inch_desc },
+ 	{ .compatible = "raspberrypi,dsi-7inch", &rpi_7inch_desc },
++	{ .compatible = "zhunyi,z80033-ph31", .data = &z80033_ph31_desc },
++	{ .compatible = "microtech,mtf080wx26a-v1", .data = &mtf080wx26a_v1_desc },
++	{ .compatible = "rjoytek,rv080wxm", .data = &rv080wxm_desc },
++	{ .compatible = "feiyang,mt1280800", .data = &mt1280800_desc },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, ili9881c_of_match);
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 744a316..9e0a8aa 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1877,7 +1877,16 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	/* XMOS based USB DACs */
+ 	switch (chip->usb_id) {
+ 	case USB_ID(0x139f, 0x5504): /* Nagra DAC */
++	case USB_ID(0x1511, 0x0037): /* AURALiC VEGA */
++	case USB_ID(0x20b1, 0x0002): /* Wyred 4 Sound DAC-2 DSD */
++	case USB_ID(0x20b1, 0x2004): /* Matrix Audio X-SPDIF 2 */
++	case USB_ID(0x20b1, 0x2008): /* Matrix Audio X-Sabre */
++	case USB_ID(0x20b1, 0x3008): /* iFi Audio micro/nano iDSD */
++	case USB_ID(0x20b1, 0x300a): /* Matrix Audio Mini-i Pro */
+ 	case USB_ID(0x20b1, 0x3089): /* Mola-Mola DAC */
++	case USB_ID(0x21ed, 0xd75a): /* Accuphase DAC-60 option card */
++	case USB_ID(0x22d9, 0x0416): /* OPPO HA-1 */
++	case USB_ID(0x22d9, 0x0436): /* OPPO Sonica */
+ 	case USB_ID(0x2522, 0x0007): /* LH Labs Geek Out 1V5 */
+ 	case USB_ID(0x2522, 0x0009): /* LH Labs Geek Pulse X Inifinity 2V0 */
+ 	case USB_ID(0x2522, 0x0012): /* LH Labs VI DAC Infinity */
+@@ -1888,6 +1897,7 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 
+ 	case USB_ID(0x0d8c, 0x0316): /* Hegel HD12 DSD */
+ 	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
++	case USB_ID(0x152a, 0x85de): /* SMSL D1 DAC */
+ 	case USB_ID(0x16d0, 0x06b2): /* NuPrime DAC-10 */
+ 	case USB_ID(0x16d0, 0x06b4): /* NuPrime Audio HD-AVP/AVA */
+ 	case USB_ID(0x16d0, 0x0733): /* Furutech ADL Stratos */
+@@ -1896,6 +1906,16 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
+ 	case USB_ID(0x1db5, 0x0003): /* Bryston BDA3 */
+ 	case USB_ID(0x20a0, 0x4143): /* WaveIO USB Audio 2.0 */
++	case USB_ID(0x20b1, 0x2005): /* Denafrips Ares DAC */
++	case USB_ID(0x20b1, 0x000a): /* Gustard DAC-X20U */
++	case USB_ID(0x20b1, 0x2009): /* DIYINHK DSD DXD 384kHz USB to I2S/DSD */
++	case USB_ID(0x20b1, 0x2023): /* JLsounds I2SoverUSB */
++	case USB_ID(0x20b1, 0x3021): /* Eastern El. MiniMax Tube DAC Supreme */
++	case USB_ID(0x20b1, 0x3023): /* Aune X1S 32BIT/384 DSD DAC */
++	case USB_ID(0x20b1, 0x302d): /* Unison Research Unico CD Due */
++	case USB_ID(0x20b1, 0x307b): /* CH Precision C1 DAC */
++	case USB_ID(0x20b1, 0x3086): /* Singxer F-1 converter board */
++	case USB_ID(0x22d9, 0x0426): /* OPPO HA-2 */
+ 	case USB_ID(0x22e1, 0xca01): /* HDTA Serenade DSD */
+ 	case USB_ID(0x249c, 0x9326): /* M2Tech Young MkIII */
+ 	case USB_ID(0x2616, 0x0106): /* PS Audio NuWave DAC */
+@@ -1922,7 +1942,7 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 			}
+ 		}
+ 		break;
+-	case USB_ID(0x16d0, 0x0a23):
++	case USB_ID(0x16d0, 0x0a23):  /* Amanero - Combo384SE */
+ 		if (fp->altsetting == 2)
+ 			return SNDRV_PCM_FMTBIT_DSD_U32_BE;
+ 		break;
+@@ -2016,8 +2036,6 @@ struct usb_audio_quirk_flags_table {
+ 
+ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+ 	/* Device matches */
+-	DEVICE_FLG(0x03f0, 0x654a, /* HP 320 FHD Webcam */
+-		   QUIRK_FLAG_GET_SAMPLE_RATE),
+ 	DEVICE_FLG(0x041e, 0x3000, /* Creative SB Extigy */
+ 		   QUIRK_FLAG_IGNORE_CTL_ERROR),
+ 	DEVICE_FLG(0x041e, 0x4080, /* Creative Live Cam VF0610 */
+@@ -2087,8 +2105,6 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+ 		   QUIRK_FLAG_CTL_MSG_DELAY_1M),
+ 	DEVICE_FLG(0x0b0e, 0x0349, /* Jabra 550a */
+ 		   QUIRK_FLAG_CTL_MSG_DELAY_1M),
+-	DEVICE_FLG(0x0c45, 0x6340, /* Sonix HD USB Camera */
+-		   QUIRK_FLAG_GET_SAMPLE_RATE),
+ 	DEVICE_FLG(0x0ecb, 0x205c, /* JBL Quantum610 Wireless */
+ 		   QUIRK_FLAG_FIXED_RATE),
+ 	DEVICE_FLG(0x0ecb, 0x2069, /* JBL Quantum810 Wireless */
+@@ -2125,16 +2141,12 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+ 		   QUIRK_FLAG_DISABLE_AUTOSUSPEND),
+ 	DEVICE_FLG(0x17aa, 0x104d, /* Lenovo ThinkStation P620 Internal Speaker + Front Headset */
+ 		   QUIRK_FLAG_DISABLE_AUTOSUSPEND),
+-	DEVICE_FLG(0x1852, 0x5062, /* Luxman D-08u */
+-		   QUIRK_FLAG_ITF_USB_DSD_DAC | QUIRK_FLAG_CTL_MSG_DELAY),
+ 	DEVICE_FLG(0x1852, 0x5065, /* Luxman DA-06 */
+ 		   QUIRK_FLAG_ITF_USB_DSD_DAC | QUIRK_FLAG_CTL_MSG_DELAY),
+ 	DEVICE_FLG(0x1901, 0x0191, /* GE B850V3 CP2114 audio interface */
+ 		   QUIRK_FLAG_GET_SAMPLE_RATE),
+ 	DEVICE_FLG(0x19f7, 0x0035, /* RODE NT-USB+ */
+ 		   QUIRK_FLAG_GET_SAMPLE_RATE),
+-	DEVICE_FLG(0x1bcf, 0x2281, /* HD Webcam */
+-		   QUIRK_FLAG_GET_SAMPLE_RATE),
+ 	DEVICE_FLG(0x1bcf, 0x2283, /* NexiGo N930AF FHD Webcam */
+ 		   QUIRK_FLAG_GET_SAMPLE_RATE),
+ 	DEVICE_FLG(0x2040, 0x7200, /* Hauppauge HVR-950Q */
+@@ -2185,10 +2197,6 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+ 		   QUIRK_FLAG_GENERIC_IMPLICIT_FB),
+ 	DEVICE_FLG(0x2b53, 0x0031, /* Fiero SC-01 (firmware v1.1.0) */
+ 		   QUIRK_FLAG_GENERIC_IMPLICIT_FB),
+-	DEVICE_FLG(0x2d95, 0x8011, /* VIVO USB-C HEADSET */
+-		   QUIRK_FLAG_CTL_MSG_DELAY_1M),
+-	DEVICE_FLG(0x2d95, 0x8021, /* VIVO USB-C-XE710 HEADSET */
+-		   QUIRK_FLAG_CTL_MSG_DELAY_1M),
+ 	DEVICE_FLG(0x30be, 0x0101, /* Schiit Hel */
+ 		   QUIRK_FLAG_IGNORE_CTL_ERROR),
+ 	DEVICE_FLG(0x413c, 0xa506, /* Dell AE515 sound bar */
+@@ -2227,6 +2235,10 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+ 		   QUIRK_FLAG_DSD_RAW),
+ 	VENDOR_FLG(0x22d9, /* Oppo */
+ 		   QUIRK_FLAG_DSD_RAW),
++	VENDOR_FLG(0x22e1, /* TempoTec Sonata BHD */
++		   QUIRK_FLAG_DSD_RAW),
++	VENDOR_FLG(0x22e8, /* Cambridge devices */
++		   QUIRK_FLAG_DSD_RAW),
+ 	VENDOR_FLG(0x23ba, /* Playback Design */
+ 		   QUIRK_FLAG_CTL_MSG_DELAY | QUIRK_FLAG_IFACE_DELAY |
+ 		   QUIRK_FLAG_DSD_RAW),
+@@ -2244,6 +2256,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+ 		   QUIRK_FLAG_DSD_RAW),
+ 	VENDOR_FLG(0x2d87, /* Cayin device */
+ 		   QUIRK_FLAG_DSD_RAW),
++	VENDOR_FLG(0x2fc6, /* E1DA #9038D  */
++		   QUIRK_FLAG_DSD_RAW),
+ 	VENDOR_FLG(0x3336, /* HEM devices */
+ 		   QUIRK_FLAG_DSD_RAW),
+ 	VENDOR_FLG(0x3353, /* Khadas devices */
