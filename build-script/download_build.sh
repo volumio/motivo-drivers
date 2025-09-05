@@ -120,6 +120,7 @@ mkdir -p modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+
 mkdir -p modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
 mkdir -p modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/usb/
 cp linux-${KERNEL_VERSION}-v7l+/arch/arm/boot/dts/overlays/motivo*.dtbo modules-rpi-${KERNEL_VERSION}-motivo/boot/overlays
+cp linux-${KERNEL_VERSION}-v7l+/arch/arm/boot/dts/overlays/es9039q2m*.dtbo modules-rpi-${KERNEL_VERSION}-motivo/boot/overlays
 cp linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko* modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
 cp linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-dsi-mt.ko* modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
 cp linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/drm_panel_orientation_quirks.ko* modules-rpi-${KERNEL_VERSION}-motivo/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/
